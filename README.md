@@ -60,7 +60,7 @@ REST API implementation for cvrp-app CRUD abstracted microserice to dynamically 
 - ```id```: integer
 - ```latitude```: float
 - ```longitude```: float
-- ```units```: float
+- ```quantity```: float
 - ```unit_id```: integer
 - ```cluster_id```: integer
 
@@ -76,7 +76,7 @@ REST API implementation for cvrp-app CRUD abstracted microserice to dynamically 
       "id": ,
       "latitude": ,
       "longitude": ,
-      "units": ,
+      "quantity": ,
       "unit_name": ,
       "cluster_id":
       }
@@ -91,7 +91,7 @@ REST API implementation for cvrp-app CRUD abstracted microserice to dynamically 
     "demands": [{
       "latitude": ,
       "longitude": ,
-      "units": ,
+      "quantity": ,
       "unit_name": ,
       "cluster_id":
       }
@@ -145,7 +145,7 @@ This creates a default set of vehicles for the model to use.
 - ```origin_id```: integer
 - ```vehicle_id```: float
 - ```stop_num```: integer
-- ```stop_distance_units```: float
+- ```stop_distance```: float
 - ```unit_id```: integer
 
 ### Manage Solutions
