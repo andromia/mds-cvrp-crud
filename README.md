@@ -35,9 +35,11 @@ REST API implementation for cvrp-app CRUD abstracted microserice to dynamically 
 
   ```json
   {
+    "origin" : {
     "id": "",
     "latitude": "",
     "latitude": ""
+    }
   }
   ```
 
@@ -45,8 +47,9 @@ REST API implementation for cvrp-app CRUD abstracted microserice to dynamically 
 
   ```json
   {
+    "origin" : {
     "latitude": "",
-    "longitude": ""
+    "latitude": ""
   }
   ```
 
@@ -69,7 +72,7 @@ REST API implementation for cvrp-app CRUD abstracted microserice to dynamically 
 
   ```json
   {
-    "demands": [ {
+    "demands": [{
       "id": ,
       "latitude": ,
       "longitude": ,
@@ -85,8 +88,7 @@ REST API implementation for cvrp-app CRUD abstracted microserice to dynamically 
 
   ```json
   {
-    "demands": [
-      {
+    "demands": [{
       "latitude": ,
       "longitude": ,
       "units": ,
@@ -102,7 +104,7 @@ REST API implementation for cvrp-app CRUD abstracted microserice to dynamically 
 ```Vehicle```s are resources describing vehicle capacity and number of vehicles:
 
 - ```id```: integer
-- ```max_capacity_units```: integer
+- ```capacity```: integer
 - ```unit_id```: integer
 
 ### Manage Vehicles
@@ -113,8 +115,10 @@ REST API implementation for cvrp-app CRUD abstracted microserice to dynamically 
 
   ```json
   {
-    "max_capacity_units": [],
-    "unit_name": ""
+    "vehicles" : [{
+      "capacity": ,
+      "unit_name": ""
+    }]
   }
   ```
 
@@ -122,8 +126,10 @@ REST API implementation for cvrp-app CRUD abstracted microserice to dynamically 
 
   ```json
   {
-    "max_capacity_units": [],
-    "uom": ""
+    "vehicles" : [{
+      "capacity": ,
+      "unit_name": ""
+    }]
   }
   ```
 
@@ -152,10 +158,12 @@ This is what the end goal of the service is for our client.
 
   ```json
   {
-    "demand_id": [],
-    "origin_id": [],
-    "vehicle_id": [],
-    "stop_num": [],
-    "[uom name]": []
+    "solutions":[{
+    "demand_id": ,
+    "origin_id": ,
+    "vehicle_id": ,
+    "stop_num": ,
+    "unit_name": ""
+    }],
   }
   ```
