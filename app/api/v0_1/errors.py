@@ -6,9 +6,11 @@ from . import bp
 class InvalidUsage(Exception):
     status_code = 400
 
-    def __init__(self, message, status_code=None, payload=None):
+    def __init__(self, message:str, status_code:int=None, payload=None, invalid_object:any=None):
         Exception.__init__(self)
         self.message = message
+        if invalid_object is not None:
+            self.invalid_object = invalid_object
         if status_code is not None:
             self.status_code = status_code
         self.payload = payload
@@ -16,6 +18,7 @@ class InvalidUsage(Exception):
     def to_dict(self):
         rv = dict(self.payload or ())
         rv['message'] = self.message
+        rv['invalid_object'] = self.invalid_object
         return rv
 
 @bp.errorhandler(InvalidUsage)
@@ -24,7 +27,7 @@ def handle_invalid_usage(error):
     response.status_code = error.status_code
     return response
 
-def error_response(status_code, message=None):
+def error_response(status_code:int, message:str=None):
     payload = {'error': HTTP_STATUS_CODES.get(status_code, 'Unknown error')}
     if message:
         payload['message'] = message
@@ -32,5 +35,5 @@ def error_response(status_code, message=None):
     response.status_code = status_code
     return response
 
-def bad_request(message):
+def bad_request(message:str):
     return error_response(400, message)
