@@ -104,7 +104,7 @@ def check_demand(demand:Dict[str,str]):
     all_units = [unit.name for unit in Unit.query.all()]
 
     if demand['unit_name'] not in all_units:
-        raise errors.InvalidUsage(f"Unit : {demand['unit']} is invalid.", invalid_object=demand)
+        raise errors.InvalidUsage(f"Unit : {demand['unit_name']} is invalid.", invalid_object=demand)
 
 
 def is_float(s:str):
