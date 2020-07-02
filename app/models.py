@@ -1,6 +1,6 @@
 from .utils import timestamp
 
-from app import db
+from app import db,orm
 
 def create_fk(identifier:str, nullable:bool=False):
     return db.Column(db.Integer, db.ForeignKey(identifier), nullable=nullable)
@@ -40,11 +40,15 @@ class Demand(db.Model):
     """
     __tablename__ = 'demand'
 
+    def __repr__(self):
+        return f"<Demand id='{self.id}'coordinates=({self.latitude},{self.longitude}) {self.units} {self.unit.name} cluster_id='{self.cluster_id}'>"
+
     id = db.Column(db.Integer, primary_key=True)
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
     units = db.Column(db.Float, nullable=False)
     unit_id = create_fk('unit.id')
+    unit = orm.relationship("Unit")
     cluster_id = db.Column(db.Integer)
 
 class Vehicle(db.Model):
@@ -79,3 +83,5 @@ class Solution(db.Model):
   stop_num = db.Column(db.Integer, nullable=False)
   stop_distance_units = db.Column(db.Float, nullable=False)
   unit_id = create_fk('unit.id')
+
+# Demand.unit = orm.relationship("Unit")
