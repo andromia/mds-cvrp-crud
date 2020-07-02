@@ -13,6 +13,9 @@ class Unit(db.Model):
     """
     __tablename__ = 'unit'
 
+    def __repr__(self):
+      return f"<Unit id='{self.id}' name='{self.name}'>"
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(10))
 
@@ -24,6 +27,9 @@ class Origin(db.Model):
       - longitude
     """
     __tablename__ = 'origin'
+
+    def __repr__(self):
+        return f"<Origin id='{self.id}' coordinates=({self.latitude},{self.longitude})>"
 
     id = db.Column(db.Integer, primary_key=True)
     latitude = db.Column(db.Float)
@@ -41,7 +47,7 @@ class Demand(db.Model):
     __tablename__ = 'demand'
 
     def __repr__(self):
-        return f"<Demand id='{self.id}'coordinates=({self.latitude},{self.longitude}) {self.units} {self.unit.name} cluster_id='{self.cluster_id}'>"
+        return f"<Demand id='{self.id}'coordinates=({self.latitude},{self.longitude}) quantity='{self.units} {self.unit.name}' cluster_id='{self.cluster_id}'>"
 
     id = db.Column(db.Integer, primary_key=True)
     latitude = db.Column(db.Float)
@@ -61,27 +67,37 @@ class Vehicle(db.Model):
     """
     __tablename__ = 'vehicle'
 
+    def __repr__(self):
+      return f"<Vehicle id='{self.id}' capacity='{self.max_capacity_units} {self.unit.name}'>"
+
     id = db.Column(db.Integer, primary_key=True)
     max_capacity_units = db.Column(db.Float, nullable=False)
     unit_id = create_fk('unit.id')
+    unit = orm.relationship("Unit")
 
 class Solution(db.Model):
-  """
-  Solutions are results along with their mappings to resources used
-  to produce them.
-    - demand identifier
-    - origin identifier
-    - stop identifier
-    - output data
-  """
-  __tablename__ = 'solution'
+    """
+    Solutions are results along with their mappings to resources used
+    to produce them.
+        - demand identifier
+        - origin identifier
+        - stop identifier
+        - output data
+    """
+    __tablename__ = 'solution'
 
-  id = db.Column(db.Integer, primary_key=True)
-  demand_id = create_fk('demand.id')
-  origin_id = create_fk('origin.id')
-  vehicle_id = create_fk('vehicle.id')
-  stop_num = db.Column(db.Integer, nullable=False)
-  stop_distance_units = db.Column(db.Float, nullable=False)
-  unit_id = create_fk('unit.id')
+    def __repr__(self):
+        return f"<Solution id='{self.id}' origin=({self.origin.latitude},{self.origin.longitude}) demand_location=({self.demand.latitude},{self.demand.longitude}) vehicle='{self.vehicle.id}' stop number {self.stop_num} at {self.stop_distance_units} {self.unit.name}>"
 
-# Demand.unit = orm.relationship("Unit")
+
+    id = db.Column(db.Integer, primary_key=True)
+    demand_id = create_fk('demand.id')
+    demand = orm.relationship("Demand")
+    origin_id = create_fk('origin.id')
+    origin = orm.relationship("Origin")
+    vehicle_id = create_fk('vehicle.id')
+    vehicle = orm.relationship("Vehicle")
+    stop_num = db.Column(db.Integer, nullable=False)
+    stop_distance_units = db.Column(db.Float, nullable=False)
+    unit_id = create_fk('unit.id')
+    unit = orm.relationship("Unit")
