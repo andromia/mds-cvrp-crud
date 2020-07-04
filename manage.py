@@ -3,6 +3,8 @@ from flask_script import Server, Manager, prompt_bool
 from app import create_app
 from app.models import db,Unit
 
+import pytest
+
 manager = Manager(create_app)
 
 # Override the default `runserver` command, to monitor the change of
