@@ -10,8 +10,7 @@ from app.models import Origin
 @bp.route("/origin", methods=["POST"])
 def origin():
     if not request.is_json:
-        raise errors.InvalidUsage(
-            "Incorrect request format! Request data must be JSON")
+        raise errors.InvalidUsage("Incorrect request format! Request data must be JSON")
 
     data = request.get_json()
 
@@ -51,16 +50,15 @@ def check_origin(origin):
     # Checking if all input parameters are present
     for param in params:
         if param not in origin:
-            raise errors.InvalidUsage("Incorrect origin!",
-                                      invalid_object=origin)
+            raise errors.InvalidUsage("Incorrect origin!", invalid_object=origin)
 
-    if not is_float(origin['latitude']):
+    if not is_float(origin["latitude"]):
         raise errors.InvalidUsage("Invalid latitude", invalid_object=origin)
 
     if origin["latitude"] < -90 or 90 < origin["latitude"]:
         raise errors.InvalidUsage("Invalid latitude", invalid_object=origin)
 
-    if not is_float(origin['longitude']):
+    if not is_float(origin["longitude"]):
         raise errors.InvalidUsage("Invalid longitude", invalid_object=origin)
 
     if origin["longitude"] < -180 or 180 < origin["longitude"]:

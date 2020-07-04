@@ -1,22 +1,24 @@
 import os
 from flask_script import Server, Manager, prompt_bool
 from app import create_app
-from app.models import db,Unit
+from app.models import db, Unit
 
 import pytest
 
 manager = Manager(create_app)
+
 
 # Override the default `runserver` command, to monitor the change of
 # the configuration file.
 # XXX: `Config.root_path` is an undocumented attribute.
 class Server(Server):
     def handle(self, app, *args, **kwargs):
-        config_path = os.path.join(app.config.root_path, 'config.py')
-        self.server_options['extra_files'] = [config_path]
+        config_path = os.path.join(app.config.root_path, "config.py")
+        self.server_options["extra_files"] = [config_path]
         super(Server, self).handle(app, *args, **kwargs)
-manager.add_command('runserver', Server())
 
+
+manager.add_command("runserver", Server())
 
 db_manager = Manager()
 
@@ -30,24 +32,27 @@ def test():
 def create_all():
     db.create_all()
 
+
 @db_manager.command
 def drop_all():
-    if prompt_bool('This action will DESTROY ALL DATA. Continue'):
+    if prompt_bool("This action will DESTROY ALL DATA. Continue"):
         db.drop_all()
+
 
 @db_manager.command
 def init_units():
-    sample_units = ["miles","pallets","kilometres","grams"]
+    sample_units = ["miles", "pallets", "kilometres", "grams"]
     for unit in sample_units:
         db.session.add(Unit(name=unit))
     db.session.commit()
+
 
 @db_manager.command
 def print_units():
     print(Unit.query.all())
 
-manager.add_command('db', db_manager)
 
+manager.add_command("db", db_manager)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     manager.run()
