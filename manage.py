@@ -18,6 +18,12 @@ manager.add_command('runserver', Server())
 
 db_manager = Manager()
 
+
+@manager.command
+def test():
+    pytest.main(["./tests"])
+
+
 @db_manager.command
 def create_all():
     db.create_all()
