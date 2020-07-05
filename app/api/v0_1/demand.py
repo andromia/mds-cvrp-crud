@@ -60,7 +60,7 @@ def demand():
             demand_entry = Demand(
                 latitude=demand["latitude"],
                 longitude=demand["longitude"],
-                units=demand["quantity"],
+                quantity=demand["quantity"],
                 cluster_id=demand["cluster_id"],
                 unit=unit,
             )
@@ -91,7 +91,7 @@ def check_demand(demand: Dict[str, str]):
         if param not in demand:
             raise errors.InvalidUsage(f"Incorrect demand!", invalid_object=demand)
 
-    if not is_float(demand["quantity"]) and demand["quantity"] < 0:
+    if not is_float(demand["quantity"]) or demand["quantity"] < 0:
         raise errors.InvalidUsage("Invalid quantity", invalid_object=demand)
 
     if not is_float(demand["latitude"]):
@@ -110,9 +110,9 @@ def check_demand(demand: Dict[str, str]):
             "Invalid cluster_id, should be int", invalid_object=demand
         )
 
-    if not is_string(demand["unit"]):
+    if not is_string(demand["unit"]) or not demand["unit"].isalpha():
         raise errors.InvalidUsage(
-            f"Invalid unit, should be string.", invalid_object=demand
+            f"Invalid unit, should be string with letters only.", invalid_object=demand
         )
 
 
