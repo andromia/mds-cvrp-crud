@@ -14,7 +14,7 @@ class Unit(db.Model):
       - unit of measure string
     """
 
-    __tablename__ = "unit"
+    __tablename__ = "units"
 
     def __repr__(self):
         return f"<Unit id='{self.id}' name='{self.name}'>"
@@ -34,7 +34,7 @@ class Origin(db.Model):
       - longitude
     """
 
-    __tablename__ = "origin"
+    __tablename__ = "origins"
 
     def __repr__(self):
         return f"<Origin id='{self.id}' coordinates=({self.latitude},{self.longitude})>"
@@ -57,7 +57,7 @@ class Demand(db.Model):
       - cluster identifier for sub-problem spaces
     """
 
-    __tablename__ = "demand"
+    __tablename__ = "demands"
 
     def __repr__(self):
         return f"<Demand id='{self.id}'coordinates=({self.latitude},{self.longitude}) quantity='{self.units} {self.unit.name}' cluster_id='{self.cluster_id}'>"
@@ -90,7 +90,7 @@ class Vehicle(db.Model):
       - asset class identifier (fk)
     """
 
-    __tablename__ = "vehicle"
+    __tablename__ = "vehicles"
 
     def __repr__(self):
         return f"<Vehicle id='{self.id}' capacity='{self.max_capacity_units} {self.unit.name}'>"
@@ -118,7 +118,7 @@ class Solution(db.Model):
         - output data
     """
 
-    __tablename__ = "solution"
+    __tablename__ = "solutions"
 
     def __repr__(self):
         return f"<Solution id='{self.id}' origin=({self.origin.latitude},{self.origin.longitude}) demand_location=({self.demand.latitude},{self.demand.longitude}) vehicle='{self.vehicle.id}' stop number {self.stop_num} at {self.stop_distance_units} {self.unit.name}>"
