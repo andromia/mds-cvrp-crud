@@ -1,7 +1,7 @@
 from . import bp
 from . import errors
 
-from flask import request, jsonify
+from flask import request, jsonify, make_response
 
 from typing import Dict, Union
 
@@ -78,7 +78,7 @@ def demand():
         #     db.session.add(un)
         #     db.session.commit()
 
-        return jsonify(demands)
+        return make_response(jsonify(demands), 201)
 
 
 def check_demand(demand: Dict[str, str]):
