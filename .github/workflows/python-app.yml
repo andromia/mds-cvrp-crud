@@ -35,5 +35,5 @@ jobs:
         
     - name: Actions for Discord
       env:
-        DISCORD_WEBHOOK: https://discordapp.com/api/webhooks/729070361152454747/m_cjT_9SmHhDDFOv1lNqY4l9XuzLl9aHTj3sHmzVDen8ZQ8_e3Gm-sDV_gaBG5BusVfU
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_SECRET }}
       uses: Ilshidur/action-discord@0.0.2
