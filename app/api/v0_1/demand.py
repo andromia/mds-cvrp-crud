@@ -10,66 +10,75 @@ from app import db
 from app.models import Demand, Unit
 
 
-@bp.route("/demand", methods=["POST"])
+@bp.route("/demand", methods=["GET", "POST"])
 def demand():
 
-    if not request.is_json:
-        raise errors.InvalidUsage("Incorrect request format! Request data must be JSON")
+    if request.method == "GET":
+        return jsonify([demand.to_dict() for demand in Demand.query.all()])
+        # return jsonify(Demand.query.all())
 
-    data = request.get_json(silent=True)
-    if not data:
-        raise errors.InvalidUsage("Invalid JSON received! Request data must be JSON")
+    if request.method == "POST":
+        if not request.is_json:
+            raise errors.InvalidUsage(
+                "Incorrect request format! Request data must be JSON"
+            )
 
-    if "demands" in data:
-        demands = data["demands"]
-    else:
-        raise errors.InvalidUsage("'demands' missing in request data")
+        data = request.get_json(silent=True)
+        if not data:
+            raise errors.InvalidUsage(
+                "Invalid JSON received! Request data must be JSON"
+            )
 
-    if not demands:
-        raise errors.InvalidUsage("'demands' is empty")
+        if "demands" in data:
+            demands = data["demands"]
+        else:
+            raise errors.InvalidUsage("'demands' missing in request data")
 
-    params = ["latitude", "longitude", "cluster_id", "unit_name", "quantity"]
+        if not demands:
+            raise errors.InvalidUsage("'demands' is empty")
 
-    # Checking if each element is valid
-    for demand in demands:
+        params = ["latitude", "longitude", "cluster_id", "unit_name", "quantity"]
 
-        error = check_demand(demand)
-        if error:
-            return error
+        # Checking if each element is valid
+        for demand in demands:
 
-        # Filtering the dict for safety
-        demand = {param: demand[param] for param in params}
+            error = check_demand(demand)
+            if error:
+                return error
 
-    demand_entries = []
+            # Filtering the dict for safety
+            demand = {param: demand[param] for param in params}
 
-    # Adding demands to database
-    for demand in demands:
-        unit = Unit.query.filter_by(name=demand["unit_name"]).first()
-        if unit is None:
-            unit = Unit(name=demand["unit_name"])
-            print(f"Created unit {unit}")
-        demand_entry = Demand(
-            latitude=demand["latitude"],
-            longitude=demand["longitude"],
-            units=demand["quantity"],
-            cluster_id=demand["cluster_id"],
-            unit=unit,
-        )
-        db.session.add(demand_entry)
-        demand_entries.append(demand_entry)
+        demand_entries = []
 
-    db.session.commit()
+        # Adding demands to database
+        for demand in demands:
+            unit = Unit.query.filter_by(name=demand["unit_name"]).first()
+            if unit is None:
+                unit = Unit(name=demand["unit_name"])
+                print(f"Created unit {unit}")
+            demand_entry = Demand(
+                latitude=demand["latitude"],
+                longitude=demand["longitude"],
+                units=demand["quantity"],
+                cluster_id=demand["cluster_id"],
+                unit=unit,
+            )
+            db.session.add(demand_entry)
+            demand_entries.append(demand_entry)
 
-    for demand, demand_entry in zip(demands, demand_entries):
-        demand["id"] = demand_entry.id
+        db.session.commit()
 
-    # for unit in data['add_units']:
-    #     print(f"Adding unit '{unit}'")
-    #     un = Unit(name=unit)
-    #     db.session.add(un)
-    #     db.session.commit()
+        for demand, demand_entry in zip(demands, demand_entries):
+            demand["id"] = demand_entry.id
 
-    return jsonify(demands)
+        # for unit in data['add_units']:
+        #     print(f"Adding unit '{unit}'")
+        #     un = Unit(name=unit)
+        #     db.session.add(un)
+        #     db.session.commit()
+
+        return jsonify(demands)
 
 
 def check_demand(demand: Dict[str, str]):
