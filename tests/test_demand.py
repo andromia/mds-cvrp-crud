@@ -26,6 +26,8 @@ class TestDemand:
         # Cleaning individual objects in-place
         for demand in sample_demand_rows:
             demand.pop("zipcode")
+            demand["latitude"] = float(demand["latitude"])
+            demand["longitude"] = float(demand["longitude"])
             demand["quantity"] = float(demand.pop("weight")) / 10
             demand["unit"] = "kilograms"
             demand["cluster_id"] = int(demand.pop("pallets")) % NUM_CLUSTERS
