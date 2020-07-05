@@ -80,8 +80,10 @@ class TestDemand:
         error_message = res.json["message"]
         assert error_message == "'demands' is empty"
 
-    # @pytest.mark.parameterize("element")
-    def test_invalid_demand(self, client):
+    @pytest.mark.parametrize(
+        "param", ["latitude", "longitude", "cluster_id", "unit_name", "quantity"]
+    )
+    def test_invalid_demand(self, client, param):
         """Test with invalid parameters in demand"""
         pass
 
