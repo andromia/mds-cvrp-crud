@@ -10,40 +10,40 @@ REST API implementation for cvrp-app CRUD abstracted microserice to dynamically 
 
 ## MVP
 
-```/api/<version>/```
+`/api/<version>/`
 
 ## Unit
 
-```Unit```s are different *unit of measures* used (pallets, weight, miles).
+`Unit`s are different _unit of measures_ used (pallets, weight, miles).
 
-- ```id```: integer
-- ```name```: string ('pallets', 'weight', 'miles')
+- `id`: integer
+- `name`: string ('pallets', 'weight', 'miles')
 
 ## Origin
 
-```Origin```s are the node users want to generate routes from (routes are sequences of stops):
+`Origin`s are the node users want to generate routes from (routes are sequences of stops):
 
-- ```id```: integer
-- ```latitude```: float
-- ```latitude```: float
+- `id`: integer
+- `latitude`: float
+- `latitude`: float
 
 ### Manage Origins
 
 - **endpoint**: /origin
-- **methods**: ```GET```, ```POST```
-- **```GET``` data expected:**
+- **methods**: `GET`, `POST`
+- **`GET` data expected:**
 
   ```json
   {
-    "origin" : {
-    "id": "",
-    "latitude": "",
-    "latitude": ""
+    "origin": {
+      "id": "",
+      "latitude": "",
+      "latitude": ""
     }
   }
   ```
 
-- **```POST``` data required:**
+- **`POST` data required:**
 
   ```json
   {
@@ -55,20 +55,20 @@ REST API implementation for cvrp-app CRUD abstracted microserice to dynamically 
 
 ## Demand
 
-```Demand``` is each node with capacity to route:
+`Demand` is each node with capacity to route:
 
-- ```id```: integer
-- ```latitude```: float
-- ```longitude```: float
-- ```quantity```: float
-- ```unit_id```: integer
-- ```cluster_id```: integer
+- `id`: integer
+- `latitude`: float
+- `longitude`: float
+- `quantity`: float
+- `unit_id`: integer
+- `cluster_id`: integer
 
 ### Manage Demand
 
 - **endpoint**: /demand
-- **methods**: ```GET```, ```POST```
-- **```GET``` data expected:**
+- **methods**: `GET`, `POST`
+- **`GET` data expected:**
 
   ```json
   {
@@ -84,7 +84,7 @@ REST API implementation for cvrp-app CRUD abstracted microserice to dynamically 
   }
   ```
 
-- **```POST``` data required:**
+- **`POST` data required:**
 
   ```json
   {
@@ -101,17 +101,17 @@ REST API implementation for cvrp-app CRUD abstracted microserice to dynamically 
 
 ## Vehicle
 
-```Vehicle```s are resources describing vehicle capacity and number of vehicles:
+`Vehicle`s are resources describing vehicle capacity and number of vehicles:
 
-- ```id```: integer
-- ```capacity```: integer
-- ```unit_id```: integer
+- `id`: integer
+- `capacity`: integer
+- `unit_id`: integer
 
 ### Manage Vehicles
 
 - **endpoint**: /vehicles
-- **methods**: ```GET```, ```POST```, ```CREATE```
-- **```GET``` data expected:**
+- **methods**: `GET`, `POST`, `CREATE`
+- **`GET` data expected:**
 
   ```json
   {
@@ -122,7 +122,7 @@ REST API implementation for cvrp-app CRUD abstracted microserice to dynamically 
   }
   ```
 
-- **```POST``` data required:**
+- **`POST` data required:**
 
   ```json
   {
@@ -133,28 +133,28 @@ REST API implementation for cvrp-app CRUD abstracted microserice to dynamically 
   }
   ```
 
-- **```CREATE```**
-This creates a default set of vehicles for the model to use.
+- **`CREATE`**
+  This creates a default set of vehicles for the model to use.
 
 ## Solution
 
-```Solution```s define inputs and their outputs via cvrp rpc.
+`Solution`s define inputs and their outputs via cvrp rpc.
 
-- ```id```: integer
-- ```demand_id```: integer
-- ```origin_id```: integer
-- ```vehicle_id```: float
-- ```stop_num```: integer
-- ```stop_distance```: float
-- ```unit_id```: integer
+- `id`: integer
+- `demand_id`: integer
+- `origin_id`: integer
+- `vehicle_id`: float
+- `stop_num`: integer
+- `stop_distance`: float
+- `unit_id`: integer
 
 ### Manage Solutions
 
 This is what the end goal of the service is for our client.
 
 - **endpoint**: /solution
-- **methods**: ```GET```
-- **```GET``` data expected:**
+- **methods**: `GET`
+- **`GET` data expected:**
 
   ```json
   {
