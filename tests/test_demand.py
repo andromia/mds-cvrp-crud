@@ -286,6 +286,11 @@ class TestDemand:
 
         assert res.status_code == 200
         assert res.headers["Content-Type"] == "application/json"
+        for demand, response in zip(sample_demands, res.json):
+            id = response.pop("id")
+            assert isinstance(id, int)
+            assert demand == response
+            response["id"] = id
 
     def test_batch_insert(self, client, sample_demands: List[dict]):
         """Test with multiple demands"""
