@@ -37,7 +37,7 @@ def demand():
         if not demands:
             raise errors.InvalidUsage("'demands' is empty")
 
-        params = ["latitude", "longitude", "cluster_id", "unit_name", "quantity"]
+        params = ["latitude", "longitude", "cluster_id", "unit", "quantity"]
 
         # Checking if each element is valid
         for demand in demands:
@@ -53,9 +53,9 @@ def demand():
 
         # Adding demands to database
         for demand in demands:
-            unit = Unit.query.filter_by(name=demand["unit_name"]).first()
+            unit = Unit.query.filter_by(name=demand["unit"]).first()
             if unit is None:
-                unit = Unit(name=demand["unit_name"])
+                unit = Unit(name=demand["unit"])
                 print(f"Created unit {unit}")
             demand_entry = Demand(
                 latitude=demand["latitude"],
@@ -84,7 +84,7 @@ def demand():
 def check_demand(demand: Dict[str, str]):
     """Return error in demand if any"""
 
-    params = ["latitude", "longitude", "cluster_id", "unit_name", "quantity"]
+    params = ["latitude", "longitude", "cluster_id", "unit", "quantity"]
 
     # Checking if all input parameters are present and are lists
     for param in params:
@@ -110,9 +110,9 @@ def check_demand(demand: Dict[str, str]):
             "Invalid cluster_id, should be int", invalid_object=demand
         )
 
-    if not is_string(demand["unit_name"]):
+    if not is_string(demand["unit"]):
         raise errors.InvalidUsage(
-            f"Invalid unit_name, should be string.", invalid_object=demand
+            f"Invalid unit, should be string.", invalid_object=demand
         )
 
 
