@@ -13,7 +13,7 @@ class TestConfig(Config):
     TESTING = True
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def client():
 
     # Creating temporary file for test db
@@ -37,6 +37,6 @@ def client():
     os.unlink(db_filepath)
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def api_base_url():
     return f"/api/{__version__}"
