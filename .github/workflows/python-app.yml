@@ -35,5 +35,5 @@ jobs:
         
     - name: Actions for Discord
       env:
-        DISCORD_WEBHOOK: ${{ secrets.DISCORD_SECRET }}
+        DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
       uses: Ilshidur/action-discord@0.0.2
