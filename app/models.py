@@ -19,6 +19,9 @@ class Unit(db.Model):
     def __repr__(self):
         return f"<Unit id='{self.id}' name='{self.name}'>"
 
+    def to_dict(self):
+        return {"id": self.id, "name": self.name}
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(10))
 
@@ -35,6 +38,9 @@ class Origin(db.Model):
 
     def __repr__(self):
         return f"<Origin id='{self.id}' coordinates=({self.latitude},{self.longitude})>"
+
+    def to_dict(self):
+        return {"id": self.id, "latitude": self.latitude, "longitude": self.longitude}
 
     id = db.Column(db.Integer, primary_key=True)
     latitude = db.Column(db.Float)
@@ -55,6 +61,16 @@ class Demand(db.Model):
 
     def __repr__(self):
         return f"<Demand id='{self.id}'coordinates=({self.latitude},{self.longitude}) quantity='{self.units} {self.unit.name}' cluster_id='{self.cluster_id}'>"
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "unit": self.unit.name,
+            "quantity": self.units,
+            "cluster_id": self.cluster_id,
+        }
 
     id = db.Column(db.Integer, primary_key=True)
     latitude = db.Column(db.Float)
@@ -79,6 +95,13 @@ class Vehicle(db.Model):
     def __repr__(self):
         return f"<Vehicle id='{self.id}' capacity='{self.max_capacity_units} {self.unit.name}'>"
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "max_capacity_units": self.max_capacity_units,
+            "unit": self.unit,
+        }
+
     id = db.Column(db.Integer, primary_key=True)
     max_capacity_units = db.Column(db.Float, nullable=False)
     unit_id = create_fk("unit.id")
@@ -99,6 +122,17 @@ class Solution(db.Model):
 
     def __repr__(self):
         return f"<Solution id='{self.id}' origin=({self.origin.latitude},{self.origin.longitude}) demand_location=({self.demand.latitude},{self.demand.longitude}) vehicle='{self.vehicle.id}' stop number {self.stop_num} at {self.stop_distance_units} {self.unit.name}>"
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "demand": self.demand.to_dict,
+            "origin": self.origin.to_dict,
+            "vehicle": self.vehicle,
+            "stop_num": self.stop_num,
+            "stop_distance_units": self.stop_distance_units,
+            "unit": self.unit.name,
+        }
 
     id = db.Column(db.Integer, primary_key=True)
     demand_id = create_fk("demand.id")
