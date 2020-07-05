@@ -92,7 +92,10 @@ def check_demand(demand: Dict[str, str]):
             raise errors.InvalidUsage(f"Incorrect demand!", invalid_object=demand)
 
     if not is_float(demand["quantity"]) or demand["quantity"] < 0:
-        raise errors.InvalidUsage("Invalid quantity", invalid_object=demand)
+        if is_int(demand["quantity"]):
+            demand["quantity"] = float(demand["quantity"])
+        else:
+            raise errors.InvalidUsage("Invalid quantity", invalid_object=demand)
 
     if not is_float(demand["latitude"]):
         raise errors.InvalidUsage("Invalid latitude", invalid_object=demand)
