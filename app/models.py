@@ -76,7 +76,7 @@ class Demand(db.Model):
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
     quantity = db.Column(db.Float, nullable=False)
-    unit_id = create_fk("unit.id")
+    unit_id = create_fk("units.id")
     unit = orm.relationship("Unit")
     cluster_id = db.Column(db.Integer)
 
@@ -104,7 +104,7 @@ class Vehicle(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     capacity = db.Column(db.Float, nullable=False)
-    unit_id = create_fk("unit.id")
+    unit_id = create_fk("units.id")
     unit = orm.relationship("Unit")
 
 
@@ -135,13 +135,13 @@ class Solution(db.Model):
         }
 
     id = db.Column(db.Integer, primary_key=True)
-    demand_id = create_fk("demand.id")
+    demand_id = create_fk("demands.id")
     demand = orm.relationship("Demand")
-    origin_id = create_fk("origin.id")
+    origin_id = create_fk("origins.id")
     origin = orm.relationship("Origin")
-    vehicle_id = create_fk("vehicle.id")
+    vehicle_id = create_fk("vehicles.id")
     vehicle = orm.relationship("Vehicle")
     stop_number = db.Column(db.Integer, nullable=False)
     stop_distance = db.Column(db.Float, nullable=False)
-    unit_id = create_fk("unit.id")
+    unit_id = create_fk("units.id")
     unit = orm.relationship("Unit")
