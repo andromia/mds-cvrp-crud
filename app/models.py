@@ -60,7 +60,7 @@ class Demand(db.Model):
     __tablename__ = "demands"
 
     def __repr__(self):
-        return f"<Demand id='{self.id}'coordinates=({self.latitude},{self.longitude}) quantity='{self.units} {self.unit.name}' cluster_id='{self.cluster_id}'>"
+        return f"<Demand id='{self.id}'coordinates=({self.latitude},{self.longitude}) quantity='{self.quantity} {self.unit.name}' cluster_id='{self.cluster_id}'>"
 
     def to_dict(self):
         return {
@@ -75,7 +75,7 @@ class Demand(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
-    units = db.Column(db.Float, nullable=False)
+    quantity = db.Column(db.Float, nullable=False)
     unit_id = create_fk("unit.id")
     unit = orm.relationship("Unit")
     cluster_id = db.Column(db.Integer)
@@ -93,17 +93,17 @@ class Vehicle(db.Model):
     __tablename__ = "vehicles"
 
     def __repr__(self):
-        return f"<Vehicle id='{self.id}' capacity='{self.max_capacity_units} {self.unit.name}'>"
+        return f"<Vehicle id='{self.id}' capacity='{self.capacity} {self.unit.name}'>"
 
     def to_dict(self):
         return {
             "id": self.id,
-            "max_capacity_units": self.max_capacity_units,
+            "capacity": self.capacity,
             "unit": self.unit,
         }
 
     id = db.Column(db.Integer, primary_key=True)
-    max_capacity_units = db.Column(db.Float, nullable=False)
+    capacity = db.Column(db.Float, nullable=False)
     unit_id = create_fk("unit.id")
     unit = orm.relationship("Unit")
 
@@ -121,7 +121,7 @@ class Solution(db.Model):
     __tablename__ = "solutions"
 
     def __repr__(self):
-        return f"<Solution id='{self.id}' origin=({self.origin.latitude},{self.origin.longitude}) demand_location=({self.demand.latitude},{self.demand.longitude}) vehicle='{self.vehicle.id}' stop number {self.stop_num} at {self.stop_distance_units} {self.unit.name}>"
+        return f"<Solution id='{self.id}' origin=({self.origin.latitude},{self.origin.longitude}) demand_location=({self.demand.latitude},{self.demand.longitude}) vehicle='{self.vehicle.id}' stop number {self.stop_number} at {self.stop_distance} {self.unit.name}>"
 
     def to_dict(self):
         return {
@@ -129,8 +129,8 @@ class Solution(db.Model):
             "demand": self.demand.to_dict,
             "origin": self.origin.to_dict,
             "vehicle": self.vehicle,
-            "stop_num": self.stop_num,
-            "stop_distance_units": self.stop_distance_units,
+            "stop_number": self.stop_number,
+            "stop_distance": self.stop_distance,
             "unit": self.unit.name,
         }
 
@@ -141,7 +141,7 @@ class Solution(db.Model):
     origin = orm.relationship("Origin")
     vehicle_id = create_fk("vehicle.id")
     vehicle = orm.relationship("Vehicle")
-    stop_num = db.Column(db.Integer, nullable=False)
-    stop_distance_units = db.Column(db.Float, nullable=False)
+    stop_number = db.Column(db.Integer, nullable=False)
+    stop_distance = db.Column(db.Float, nullable=False)
     unit_id = create_fk("unit.id")
     unit = orm.relationship("Unit")
