@@ -2,6 +2,8 @@ import pytest
 import logging
 import json
 
+import random
+
 # from flask import FlaskClient
 from werkzeug.wrappers import Response
 
@@ -87,9 +89,19 @@ class TestDemand:
         """Test with invalid parameters in demand"""
         pass
 
-    def test_single_insert(self, sample_demands: list):
+    def test_single_insert(self, client, sample_demands: list):
         """Test with single demand"""
-        pass
+        sample_demand = random.choice(sample_demands)
+        logging.debug(f"Demand : {sample_demand}")
+        res: Response = client.post(
+            self.demand_endpoint,
+            headers={"Content-Type": "application/json"},
+            json={"demands": [sample_demand]},
+        )
+        logging.debug(f"Response : {res}")
+        logging.debug(f"Response Data : {res.data}")
+        assert res.status_code == 200
+        assert res.headers["Content-Type"] == "application/json"
 
     def test_batch_insert(self, sample_demands: list):
         """Test with multiple demands"""
