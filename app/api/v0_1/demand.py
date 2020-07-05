@@ -16,14 +16,17 @@ def demand():
     if not request.is_json:
         raise errors.InvalidUsage("Incorrect request format! Request data must be JSON")
 
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if not data:
+        raise errors.InvalidUsage("Invalid JSON received! Request data must be JSON")
 
-    # check_demands(data['demands'])
-
-    if "demands" in data and data["demands"]:
+    if "demands" in data:
         demands = data["demands"]
     else:
         raise errors.InvalidUsage("'demands' missing in request data")
+
+    if not demands:
+        raise errors.InvalidUsage("'demands' is empty")
 
     params = ["latitude", "longitude", "cluster_id", "unit_name", "quantity"]
 
