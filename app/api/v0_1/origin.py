@@ -1,47 +1,62 @@
 from . import bp, errors
 
-from flask import request, jsonify
+from flask import request, jsonify, make_response
 
 from app import db
 
 from app.models import Origin
 
 
-@bp.route("/origin", methods=["POST"])
+@bp.route("/origin", methods=["GET", "POST"])
 def origin():
-    if not request.is_json:
-        raise errors.InvalidUsage("Incorrect request format! Request data must be JSON")
 
-    data = request.get_json()
+    if request.method == "GET":
+        origin = Origin.query.get_or_404(1).to_dict()
+        return jsonify({"origin": origin})
 
-    # check_origins(data['origins'])
+    if request.method == "POST":
 
-    if "origin" in data and data["origin"]:
-        origin = data["origin"]
-    else:
-        raise errors.InvalidUsage("'origin' missing in request data")
+        if not request.is_json:
+            raise errors.InvalidUsage(
+                "Incorrect request format! Request data must be JSON"
+            )
 
-    params = ["latitude", "longitude"]
+        data = request.get_json()
 
-    # Checking if origin is valid
-    check_origin(origin)
-    # Filtering the dict for safety
-    origin = {param: origin[param] for param in params}
+        if "origin" in data:
+            origin = data["origin"]
+        else:
+            raise errors.InvalidUsage("'origin' missing in request data")
 
-    current_origins = Origin.query.all()
-    for row in current_origins:
-        db.session.delete(row)
+        if not isinstance(origin, list):
+            raise errors.InvalidUsage("'origin' should be list")
 
-    db.session.commit()
+        if not origin:
+            raise errors.InvalidUsage("'origin' is empty")
+        elif len(origin) != 1:
+            raise errors.InvalidUsage("'origin' contains more than one object")
 
-    new_origin = Origin(**origin)
-    db.session.add(new_origin)
+        origin = origin[0]
 
-    db.session.commit()
+        # Checking if origin is valid
+        check_origin(origin)
 
-    origin["id"] = new_origin.id
+        # Deleting every origin
+        Origin.query.delete()
 
-    return jsonify({"status": "Success", "origin": origin})
+        # Filtering the dict
+        params = ["latitude", "longitude"]
+        origin = {param: origin[param] for param in params}
+
+        # Using dict unpacking for creation
+        new_origin = Origin(**origin)
+        db.session.add(new_origin)
+
+        db.session.commit()
+
+        origin["id"] = new_origin.id
+
+        return make_response(jsonify({"origin": origin}), 201)
 
 
 def check_origin(origin):
