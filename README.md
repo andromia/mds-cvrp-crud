@@ -77,7 +77,7 @@ REST API implementation for cvrp-app CRUD abstracted microserice to dynamically 
       "latitude": ,
       "longitude": ,
       "quantity": ,
-      "unit_name": ,
+      "unit": ,
       "cluster_id":
       }
     ]
@@ -92,7 +92,7 @@ REST API implementation for cvrp-app CRUD abstracted microserice to dynamically 
       "latitude": ,
       "longitude": ,
       "quantity": ,
-      "unit_name": ,
+      "unit": ,
       "cluster_id":
       }
     ]
@@ -117,7 +117,7 @@ REST API implementation for cvrp-app CRUD abstracted microserice to dynamically 
   {
     "vehicles" : [{
       "capacity": ,
-      "unit_name": ""
+      "unit": ""
     }]
   }
   ```
@@ -128,7 +128,7 @@ REST API implementation for cvrp-app CRUD abstracted microserice to dynamically 
   {
     "vehicles" : [{
       "capacity": ,
-      "unit_name": ""
+      "unit": ""
     }]
   }
   ```
@@ -144,7 +144,7 @@ REST API implementation for cvrp-app CRUD abstracted microserice to dynamically 
 - `demand_id`: integer
 - `origin_id`: integer
 - `vehicle_id`: float
-- `stop_num`: integer
+- `stop_number`: integer
 - `stop_distance`: float
 - `unit_id`: integer
 
@@ -162,8 +162,8 @@ This is what the end goal of the service is for our client.
     "demand_id": ,
     "origin_id": ,
     "vehicle_id": ,
-    "stop_num": ,
-    "unit_name": ""
+    "stop_number": ,
+    "unit": ""
     }],
   }
   ```
