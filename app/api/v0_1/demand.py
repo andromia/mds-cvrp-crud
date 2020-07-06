@@ -82,10 +82,46 @@ def demands():
         return make_response(jsonify(demands), 201)
 
 
-@bp.route("/demand/<int:id>", methods=["GET"])
+@bp.route("/demand/<int:id>", methods=["GET", "PUT"])
 def demand(id):
     if request.method == "GET":
         return jsonify(Demand.query.get_or_404(id).to_dict())
+    if request.method == "PUT":
+
+        demand: Demand = Demand.query.get_or_404(id)
+        if not request.is_json:
+            raise errors.InvalidUsage(
+                "Incorrect request format! Request data must be JSON"
+            )
+        data: Union[dict, None] = request.get_json(silent=True)
+        if not data:
+            raise errors.InvalidUsage(
+                "Invalid JSON received! Request data must be JSON"
+            )
+
+        if "demand" in data:
+            new_demand: dict = data["demand"]
+        else:
+            raise errors.InvalidUsage("'demand' missing in request data")
+
+        # Validate demand
+        check_demand(new_demand)
+
+        # Update values in DB
+        unit = Unit.query.filter_by(name=new_demand["unit"]).first()
+        if unit is None:
+            unit = Unit(name=new_demand["unit"])
+            logging.debug(f"Created unit {unit}")
+
+        demand.latitude = new_demand["latitude"]
+        demand.longitude = new_demand["longitude"]
+        demand.quantity = new_demand["quantity"]
+        demand.cluster_id = new_demand["cluster_id"]
+        demand.unit = unit
+
+        db.session.commit()
+
+        return make_response(jsonify(demand.to_dict(), 200))
 
 
 def check_demand(demand: Dict[str, str]):
