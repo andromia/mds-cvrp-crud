@@ -191,71 +191,60 @@ class TestDemand:
         assert error_message == "'demands' is empty"
 
     @pytest.mark.parametrize(
-        "param", ["latitude", "longitude", "unit", "cluster_id", "quantity"]
+        "param, value",
+        [
+            ("latitude", -101.536),
+            ("latitude", "-101.536"),
+            ("latitude", -846),
+            ("latitude", "-846"),
+            ("latitude", 507.305),
+            ("latitude", "1.04"),
+            ("latitude", 643),
+            ("latitude", "75"),
+            ("latitude", "abl{s"),
+            ("latitude", ""),
+            ("longitude", -967.895),
+            ("longitude", "-967.895"),
+            ("longitude", -816),
+            ("longitude", "-816"),
+            ("longitude", 2131.114),
+            ("longitude", "2131.114"),
+            ("longitude", 137),
+            ("longitude", "137"),
+            ("longitude", "itKv{a"),
+            ("longitude", ""),
+            ("cluster_id", -4830.546),
+            ("cluster_id", -2113),
+            ("cluster_id", 9326.594),
+            ("cluster_id", "uHNHjdeb2"),
+            ("cluster_id", ""),
+            ("unit", -6813.875),
+            ("unit", -3942),
+            ("unit", 2959.333),
+            ("unit", 1769),
+            ("unit", "-23"),
+            ("unit", "1832"),
+            ("unit", "faf2"),
+            ("unit", "knuw{"),
+            ("unit", "}knuw"),
+            ("unit", "!dead"),
+            ("unit", ""),
+            ("quantity", -1391.151),
+            ("quantity", "-1391.151"),
+            ("quantity", -4921),
+            ("quantity", "-4921"),
+            ("quantity", "   bsgj"),
+            ("quantity", "hfuo6542w"),
+            ("quantity", ""),
+        ],
     )
-    def test_invalid_demand(self, client, param, random_demand):
+    def test_invalid_demand(self, client, param, value, random_demand):
         """Test with invalid parameters in demand"""
 
         demand = random_demand
         logging.debug(f"Demand : {demand}")
 
-        invalid_choices = {
-            "latitude": [
-                random.uniform(-10000, -90.1),
-                random.uniform(90.1, 10000),
-                "".join(
-                    random.choices(
-                        string.ascii_letters + "".join(["{", "}", '"', "'"]),
-                        k=random.randint(1, 27),
-                    )
-                ),
-            ],
-            "longitude": [
-                random.uniform(-10000, -90.1),
-                random.uniform(90.1, 10000),
-                "".join(
-                    random.choices(
-                        string.ascii_letters + "".join(["{", "}", '"', "'"]),
-                        k=random.randint(1, 27),
-                    )
-                ),
-            ],
-            "cluster_id": [
-                random.uniform(-10000, 0),
-                random.uniform(0, -10000),
-                random.randint(-10000, 0),
-                random.randint(0, 10000),
-                "".join(
-                    random.choices(
-                        string.ascii_letters + "".join(["{", "}", '"', "'"]),
-                        k=random.randint(1, 27),
-                    )
-                ),
-            ],
-            "unit": [
-                random.uniform(-10000, 0),
-                random.uniform(0, -10000),
-                random.randint(-10000, 0),
-                random.randint(0, 10000),
-                "".join(
-                    random.choices(
-                        string.ascii_letters + "".join(["{", "}", '"', "'"]),
-                        k=random.randint(1, 10),
-                    )
-                ),
-            ],
-            "quantity": [
-                random.randint(-10000, 0),
-                "".join(
-                    random.choices(
-                        string.ascii_letters + "".join(["{", "}", '"', "'"]),
-                        k=random.randint(1, 10),
-                    )
-                ),
-            ],
-        }
-
-        demand[param] = random.choice(invalid_choices[param])
+        demand[param] = value
 
         logging.debug(f"Invalid Demand : {demand}")
 
