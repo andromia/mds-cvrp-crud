@@ -3,6 +3,7 @@ from . import errors
 
 from flask import request, jsonify, make_response
 
+import logging
 from typing import Dict, Union
 
 from app import db
@@ -56,7 +57,7 @@ def demand():
             unit = Unit.query.filter_by(name=demand["unit"]).first()
             if unit is None:
                 unit = Unit(name=demand["unit"])
-                print(f"Created unit {unit}")
+                logging.debug(f"Created unit {unit}")
             demand_entry = Demand(
                 latitude=demand["latitude"],
                 longitude=demand["longitude"],
