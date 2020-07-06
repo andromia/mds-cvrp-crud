@@ -12,7 +12,7 @@ from app.models import Demand, Unit
 
 
 @bp.route("/demand", methods=["GET", "POST"])
-def demand():
+def demands():
 
     if request.method == "GET":
         return jsonify([demand.to_dict() for demand in Demand.query.all()])
@@ -80,6 +80,12 @@ def demand():
         #     db.session.commit()
 
         return make_response(jsonify(demands), 201)
+
+
+@bp.route("/demand/<int:id>", methods=["GET"])
+def demand(id):
+    if request.method == "GET":
+        return jsonify(Demand.query.get_or_404(id).to_dict())
 
 
 def check_demand(demand: Dict[str, str]):
