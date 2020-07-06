@@ -284,8 +284,13 @@ class TestDemand:
         logging.debug(f"Response : {res}")
         logging.debug(f"Response Data : {res.data}")
 
-        assert res.status_code == 200
+        assert res.status_code == 201
         assert res.headers["Content-Type"] == "application/json"
+        for demand, response in zip([sample_demand], res.json):
+            id = response.pop("id")
+            assert isinstance(id, int)
+            assert demand == response
+            response["id"] = id
 
     def test_batch_insert(self, client, sample_demands: List[dict]):
         """Test with multiple demands"""
@@ -298,7 +303,7 @@ class TestDemand:
             json={"demands": sample_demands},
         )
 
-        assert res.status_code == 200
+        assert res.status_code == 201
         assert len(res.json) == len(sample_demands)
 
         for demand, response in zip(sample_demands, res.json):
