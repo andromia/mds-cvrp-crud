@@ -268,17 +268,17 @@ class TestDemand:
         assert res.status_code == 400
         assert f"Invalid {param}" in res.json["message"]
 
-    def test_single_insert(self, client, sample_demands: List[dict]):
+    def test_single_insert(self, client, random_demand: List[dict]):
         """Test with single demand"""
 
-        sample_demand = random.choice(sample_demands)
+        demand = random_demand
 
-        logging.debug(f"Demand : {sample_demand}")
+        logging.debug(f"Demand : {demand}")
 
         res: Response = client.post(
             self.demand_endpoint,
             headers={"Content-Type": "application/json"},
-            json={"demands": [sample_demand]},
+            json={"demands": [demand]},
         )
 
         logging.debug(f"Response : {res}")
@@ -286,7 +286,7 @@ class TestDemand:
 
         assert res.status_code == 201
         assert res.headers["Content-Type"] == "application/json"
-        for demand, response in zip([sample_demand], res.json):
+        for demand, response in zip([demand], res.json):
             id = response.pop("id")
             assert isinstance(id, int)
             assert demand == response
