@@ -135,7 +135,7 @@ def check_demand(demand: Dict[str, str]):
             raise errors.InvalidUsage(f"Incorrect demand!", invalid_object=demand)
 
     if not is_float(demand["quantity"]) or demand["quantity"] < 0:
-        if is_int(demand["quantity"]):
+        if is_int(demand["quantity"]) and demand["quantity"] >= 0:
             demand["quantity"] = float(demand["quantity"])
         else:
             raise errors.InvalidUsage("Invalid quantity", invalid_object=demand)
@@ -151,7 +151,7 @@ def check_demand(demand: Dict[str, str]):
     if demand["longitude"] < -180 or 180 < demand["longitude"]:
         raise errors.InvalidUsage("Invalid longitude", invalid_object=demand)
 
-    if not is_int(demand["cluster_id"]):
+    if not is_int(demand["cluster_id"]) or demand["cluster_id"] < 0:
         raise errors.InvalidUsage(
             "Invalid cluster_id, should be int", invalid_object=demand
         )
