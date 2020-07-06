@@ -68,7 +68,7 @@ class Demand(db.Model):
             "latitude": self.latitude,
             "longitude": self.longitude,
             "unit": self.unit.name,
-            "quantity": self.units,
+            "quantity": self.quantity,
             "cluster_id": self.cluster_id,
         }
 
