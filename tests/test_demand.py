@@ -286,7 +286,7 @@ class TestDemand:
 
         assert res.status_code == 201
         assert res.headers["Content-Type"] == "application/json"
-        for demand, response in zip(sample_demands, res.json):
+        for demand, response in zip([sample_demand], res.json):
             id = response.pop("id")
             assert isinstance(id, int)
             assert demand == response
