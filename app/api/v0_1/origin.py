@@ -8,7 +8,7 @@ from app.models import Origin
 
 
 @bp.route("/origin", methods=["GET", "POST"])
-def origin():
+def origins():
 
     if request.method == "GET":
         origin = Origin.query.get_or_404(1).to_dict()
@@ -78,6 +78,12 @@ def check_origin(origin):
 
     if origin["longitude"] < -180 or 180 < origin["longitude"]:
         raise errors.InvalidUsage("Invalid longitude", invalid_object=origin)
+
+
+@bp.route("/origin/<int:id>", methods=["GET"])
+def origin(id):
+    if request.method == "GET":
+        return Origin.query.get_or_404(id)
 
 
 def is_float(x: any):
