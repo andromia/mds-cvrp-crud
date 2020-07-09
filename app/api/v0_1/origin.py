@@ -69,7 +69,7 @@ def origins():
 @bp.route("/origin/<int:id>", methods=["GET", "PUT"])
 def origin(id: int):
     if request.method == "GET":
-        return Origin.query.get_or_404(id)
+        return Origin.query.get_or_404(id).to_dict()
     if request.method == "PUT":
 
         origin: Origin = Origin.query.get_or_404(id)
