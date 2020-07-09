@@ -28,6 +28,17 @@ class TestOrigin:
             "longitude": random.uniform(-180, 180),
         }
 
+    @pytest.fixture(scope="class")
+    def random_origins(self, num_objects=20):
+        """Return list of random origins"""
+        return [
+            {
+                "latitude": random.uniform(-90, 90),
+                "longitude": random.uniform(-180, 180),
+            }
+            for i in range(num_objects)
+        ]
+
     @pytest.mark.parametrize(
         "content_type",
         [
@@ -230,3 +241,22 @@ class TestOrigin:
             assert isinstance(id, int)
             assert origin == response
             response["id"] = id
+
+    def test_multiple_insert(self, client, random_origins: List[Dict]):
+        """Test with multiple objects in array"""
+
+        logging.debug(f"Number of origins : {len(random_origins)}")
+
+        res: Response = client.post(
+            self.origin_endpoint,
+            headers={"Content-Type": "application/json"},
+            json={"origins": random_origins},
+        )
+
+        logging.debug(f"Response : {res}")
+        logging.debug(f"Response Data : {res.data}")
+
+        assert res.status_code == 400
+        assert res.headers["Content-Type"] == "application/json"
+        assert "contains more than one object" in res.json["message"]
+
