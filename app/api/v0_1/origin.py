@@ -67,7 +67,7 @@ def origins():
 
 
 @bp.route("/origin/<int:id>", methods=["GET", "PUT"])
-def origin(id):
+def origin(id: int):
     if request.method == "GET":
         return Origin.query.get_or_404(id)
     if request.method == "PUT":
