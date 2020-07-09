@@ -5,7 +5,7 @@ import json
 import random
 import string
 
-from typing import List
+from typing import List, Dict
 
 # from flask import FlaskClient
 from werkzeug.wrappers import Response
@@ -188,7 +188,7 @@ class TestOrigin:
             ("longitude", ""),
         ],
     )
-    def test_invalid_origin(self, client, param, value, random_origin):
+    def test_invalid_origin(self, client, param, value, random_origin: Dict):
         """Test with invalid parameters in origin"""
 
         origin = random_origin
@@ -207,7 +207,7 @@ class TestOrigin:
         assert res.status_code == 400
         assert f"Invalid {param}" in res.json["message"]
 
-    def test_single_insert(self, client, random_origin: List[dict]):
+    def test_single_insert(self, client, random_origin: Dict):
         """Test with single origin"""
 
         origin = random_origin
