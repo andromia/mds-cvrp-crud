@@ -83,7 +83,7 @@ def demands():
 
 
 @bp.route("/demand/<int:id>", methods=["GET", "PUT"])
-def demand(id):
+def demand(id: int):
     if request.method == "GET":
         return jsonify(Demand.query.get_or_404(id).to_dict())
     if request.method == "PUT":
@@ -121,7 +121,7 @@ def demand(id):
 
         db.session.commit()
 
-        return make_response(jsonify(demand.to_dict(), 200))
+        return make_response(jsonify(demand.to_dict()), 200)
 
 
 def check_demand(demand: Dict[str, str]):

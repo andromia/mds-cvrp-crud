@@ -36,6 +36,11 @@ def handle_invalid_usage(error):
     return response
 
 
+@bp.errorhandler(404)
+def resource_not_found(e):
+    return jsonify(error=str(e)), 404
+
+
 def error_response(status_code: int, message: str = None):
     payload = {"error": HTTP_STATUS_CODES.get(status_code, "Unknown error")}
     if message:
