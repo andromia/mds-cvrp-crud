@@ -1,47 +1,110 @@
 from . import bp, errors
 
-from flask import request, jsonify
+from flask import request, jsonify, make_response
+
+import logging
+from typing import Dict, Union
 
 from app import db
 
-from app.models import Origin
+from app.models import Origin, Unit
 
 
-@bp.route("/origin", methods=["POST"])
-def origin():
-    if not request.is_json:
-        raise errors.InvalidUsage("Incorrect request format! Request data must be JSON")
+@bp.route("/origin", methods=["GET", "POST"])
+def origins():
 
-    data = request.get_json()
+    if request.method == "GET":
+        origin = Origin.query.get_or_404(1).to_dict()
+        return jsonify({"origin": origin})
 
-    # check_origins(data['origins'])
+    if request.method == "POST":
 
-    if "origin" in data and data["origin"]:
-        origin = data["origin"]
-    else:
-        raise errors.InvalidUsage("'origin' missing in request data")
+        if not request.is_json:
+            raise errors.InvalidUsage(
+                "Incorrect request format! Request data must be JSON"
+            )
 
-    params = ["latitude", "longitude"]
+        data = request.get_json(silent=True)
+        if not data:
+            raise errors.InvalidUsage(
+                "Invalid JSON received! Request data must be JSON"
+            )
 
-    # Checking if origin is valid
-    check_origin(origin)
-    # Filtering the dict for safety
-    origin = {param: origin[param] for param in params}
+        if "origins" in data:
+            origins = data["origins"]
+        else:
+            raise errors.InvalidUsage("'origins' missing in request data")
 
-    current_origins = Origin.query.all()
-    for row in current_origins:
-        db.session.delete(row)
+        if not isinstance(origins, list):
+            raise errors.InvalidUsage("'origins' should be list")
 
-    db.session.commit()
+        if not origins:
+            raise errors.InvalidUsage("'origins' is empty")
+        elif len(origins) != 1:
+            raise errors.InvalidUsage("'origins' contains more than one object")
 
-    new_origin = Origin(**origin)
-    db.session.add(new_origin)
+        origin = origins[0]
 
-    db.session.commit()
+        # Checking if origin is valid
+        check_origin(origin)
 
-    origin["id"] = new_origin.id
+        # Deleting every origin
+        Origin.query.delete()
 
-    return jsonify({"status": "Success", "origin": origin})
+        # Filtering the dict
+        params = ["latitude", "longitude"]
+        origin = {param: origin[param] for param in params}
+
+        # Using dict unpacking for creation
+        new_origin = Origin(**origin)
+        db.session.add(new_origin)
+
+        db.session.commit()
+
+        origin["id"] = new_origin.id
+
+        return make_response(jsonify({"origins": [origin]}), 201)
+
+
+@bp.route("/origin/<int:id>", methods=["GET", "PUT"])
+def origin(id: int):
+    if request.method == "GET":
+        return Origin.query.get_or_404(id).to_dict()
+    if request.method == "PUT":
+
+        origin: Origin = Origin.query.get_or_404(id)
+
+        if not request.is_json:
+            raise errors.InvalidUsage(
+                "Incorrect request format! Request data must be JSON"
+            )
+
+        data: Union[dict, None] = request.get_json(silent=True)
+        if not data:
+            raise errors.InvalidUsage(
+                "Invalid JSON received! Request data must be JSON"
+            )
+
+        params = ["latitude", "longitude"]
+
+        new_origin: Dict[str, any] = {}
+
+        for param in params:
+            if param in data:
+                new_origin[param] = data[param]
+            else:
+                raise errors.InvalidUsage(f"{param} missing in request data")
+
+        # Validate new data
+        check_origin(new_origin)
+
+        # Update values in DB
+        origin.latitude = new_origin["latitude"]
+        origin.longitude = new_origin["longitude"]
+
+        db.session.commit()
+
+        return make_response(jsonify(origin.to_dict()), 200)
 
 
 def check_origin(origin):
