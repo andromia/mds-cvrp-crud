@@ -104,7 +104,7 @@ def origin(id: int):
 
         db.session.commit()
 
-        return make_response(jsonify(origin.to_dict(), 200))
+        return make_response(jsonify(origin.to_dict()), 200)
 
 
 def check_origin(origin):

@@ -286,7 +286,6 @@ class TestOrigin:
             assert origin == response
             response["id"] = id
 
-            # Checking individual endpoint data
             test_res = client.get(self.origin_endpoint + f"/{id}")
 
             logging.debug(f"Individual Response for id {id} : {test_res}")
@@ -296,5 +295,43 @@ class TestOrigin:
             individual_origin.pop("id")
             assert test_res.status_code == 200
             assert test_res.is_json
+            assert individual_origin == origin
+
+    def test_individual_put(self, client, random_origin):
+        """Test by inserting origin and PUT from individual resource"""
+
+        origins = [random_origin]
+
+        logging.debug(f"Origin : {random_origin}")
+
+        res: Response = client.post(
+            self.origin_endpoint,
+            headers={"Content-Type": "application/json"},
+            json={"origins": origins},
+        )
+
+        logging.debug(f"Response : {res}")
+        logging.debug(f"Response Data : {res.data}")
+
+        assert res.status_code == 201
+        assert res.is_json
+
+        for origin, response in zip(origins, res.json["origins"]):
+            id = response.pop("id")
+            assert isinstance(id, int)
+            # PUT individual endpoint data
+            test_res = client.put(
+                self.origin_endpoint + f"/{id}",
+                headers={"content-type": "application/json"},
+                json=random_origin,
+            )
+
+            logging.debug(f"Individual Response for id {id} : {test_res}")
+            logging.debug(f"Individual Response Data : {test_res.data}")
+
+            assert test_res.status_code == 200
+            assert test_res.is_json
+            individual_origin: dict = test_res.json
+            individual_origin.pop("id")
             assert individual_origin == origin
 
