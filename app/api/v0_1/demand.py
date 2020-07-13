@@ -121,7 +121,7 @@ def demand(id: int):
 
         db.session.commit()
 
-        return make_response(jsonify(demand.to_dict(), 200))
+        return make_response(jsonify(demand.to_dict()), 200)
 
 
 def check_demand(demand: Dict[str, str]):
