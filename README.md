@@ -1,6 +1,6 @@
-# mds-cvrp-crud
+# solverstack-vrp-crud
 
-![Python application](https://github.com/andromia/mds-cvrp-crud/workflows/Python%20application/badge.svg)
+![Python application](https://github.com/andromia/solverstack-vrp-crud/workflows/Python%20application/badge.svg)
 [![Discord](https://img.shields.io/discord/721862473132540007?label=discord&style=plastic)](https://discord.gg/wg7xSAf)
 [![Slack](https://img.shields.io/badge/slack-workspace-orange)](https://join.slack.com/t/andromiasoftware/shared_invite/zt-felqfjhs-Tvma8OYuCExxdmQgHOIGsg)
 
