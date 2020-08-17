@@ -1,12 +1,12 @@
-# solverstack-vrp-crud
+# solverstack-crud
 
-![vrp-crud](https://github.com/andromia/solverstack-vrp-crud/workflows/vrp-crud/badge.svg)
+![crud](https://github.com/andromia/solverstack-crud/workflows/crud/badge.svg)
 [![Discord](https://img.shields.io/discord/721862473132540007?label=discord&style=plastic)](https://discord.gg/wg7xSAf)
 [![Slack](https://img.shields.io/badge/slack-workspace-orange)](https://join.slack.com/t/andromiasoftware/shared_invite/zt-felqfjhs-Tvma8OYuCExxdmQgHOIGsg)
 
 [Under Development]
 
-REST API implementation for cvrp-app CRUD abstracted microserice to dynamically support [cvrp-app-rpc](https://github.com/andromia/cvrp-app-rpc).
+CRUD service for solverstack service modules.
 
 ## MVP
 
