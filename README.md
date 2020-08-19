@@ -6,7 +6,7 @@
 
 [Under Development]
 
-CRUD service for solverstack service modules.
+CRUD service for solverstack.
 
 ## MVP
 
