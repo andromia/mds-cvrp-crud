@@ -12,7 +12,7 @@ from app.models import Depot, Unit
 
 def is_float(x: any):
     return isinstance(x, float)
-    
+
 
 def check_depot(depot):
     params = ["latitude", "longitude"]

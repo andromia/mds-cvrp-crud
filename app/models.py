@@ -9,14 +9,14 @@ def create_fk(identifier: str, nullable: bool = False):
 
 
 class User(db.Model):
-    __tablename__ = 'user'
+    __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
 
     def __repr__(self):
-        return '<User {}>'.format(self.username)
+        return "<User {}>".format(self.username)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -138,7 +138,7 @@ class Route(db.Model):
             "demand": self.demand.to_dict,
             "depot": self.depot.to_dict,
             "vehicle": self.vehicle,
-            "stop_number": self.stop_number
+            "stop_number": self.stop_number,
         }
 
     id = db.Column(db.Integer, primary_key=True)

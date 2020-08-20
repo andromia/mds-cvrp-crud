@@ -334,4 +334,3 @@ class TestDepot:
             individual_depot: dict = test_res.json
             individual_depot.pop("id")
             assert individual_depot == depot
-

@@ -300,4 +300,3 @@ class TestDemand:
             assert isinstance(id, int)
             assert demand == response
             response["id"] = id
-
