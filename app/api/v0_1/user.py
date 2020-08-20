@@ -40,18 +40,17 @@ def user():
 
         if not user:
             raise errors.InvalidUsage("'user' is empty")
-        elif len(user) > 1:
-            raise errors.InvalidUsage("'user' contains more than one object")
 
         # Using dict unpacking for creation
-        new_user = User(**user)
+        new_user = User(**{key: user[key] for key in user if key != "password"})
+        new_user.set_password(user["password"])
         db.session.add(new_user)
 
         db.session.commit()
 
         user["id"] = new_user.id
 
-        return make_response(jsonify({"user": [user]}), 201)
+        return make_response(jsonify({"user": [new_user.to_dict()]}), 201)
 
 
 @bp.route("/user/<int:id>", methods=["GET", "PUT"])
@@ -89,4 +88,4 @@ def user_one(id: int):
 
         db.session.commit()
 
-        return make_response(jsonify(user.to_dict()), 200)
+        return make_response(jsonify(new_user.to_dict()), 200)

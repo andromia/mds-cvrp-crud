@@ -1,23 +1,28 @@
 from . import common
-from app import create_app
+from app import create_app, db
 from app import __version__
 
 from config import Config
 
+import tempfile
 import logging
 import pytest
 import json
 
 
-class TestConfig(Config):
-    TESTING = True
-    SQLALCHEMY_DATABASE_URI = "sqlite://"
+def test_user_post(client, api_base_url):
+    input_data = {
+        "user": {
+            "username": "test",
+            "password": "test"
+        }
+    }
+    logging.debug(f"input_data: {input_data}")
 
+    endpoint: str= api_base_url + "/user"
+    logging.debug(f"endpoint: {endpoint}")
 
-@pytest.fixture
-def client():
-    yield create_app(TestConfig).test_client()
+    response = client.post(endpoint, json=input_data)
+    output = json.loads(response.data)
 
-
-def test_user(client):
-    pass
+    assert output
