@@ -12,6 +12,41 @@ CRUD service for solverstack.
 
 `/api/<version>/`
 
+## User
+
+- `id`: integer
+- `username`: string
+- `email`: string
+- `password`: hashed-string
+
+### Manage Users
+
+- **endpoint**: /user
+- **methods**: `GET`, `POST`
+- **`GET` data expected:**
+
+  ```json
+  {
+    "user": {
+      "id": "",
+      "username": "",
+      "email": "",
+      "hashed_password": ""
+    }
+  }
+  ```
+
+- **`POST` data required:**
+
+  ```json
+  {
+    "user" : {
+    "username": "",
+    "email": "",
+    "password": ""
+  }
+  ```
+
 ## Unit
 
 `Unit`s are different _unit of measures_ used (pallets, weight, miles).
@@ -19,23 +54,23 @@ CRUD service for solverstack.
 - `id`: integer
 - `name`: string ('pallets', 'weight', 'miles')
 
-## Origin
+## Depot
 
-`Origin`s are the node users want to generate routes from (routes are sequences of stops):
+`Depot`s are points of origin consisting of:
 
 - `id`: integer
 - `latitude`: float
 - `latitude`: float
 
-### Manage Origins
+### Manage Depots
 
-- **endpoint**: /origin
+- **endpoint**: /depot
 - **methods**: `GET`, `POST`
 - **`GET` data expected:**
 
   ```json
   {
-    "origin": {
+    "depot": {
       "id": "",
       "latitude": "",
       "latitude": ""
@@ -47,7 +82,7 @@ CRUD service for solverstack.
 
   ```json
   {
-    "origin" : {
+    "depot" : {
     "latitude": "",
     "latitude": ""
   }
@@ -62,7 +97,6 @@ CRUD service for solverstack.
 - `longitude`: float
 - `quantity`: float
 - `unit_id`: integer
-- `cluster_id`: integer
 
 ### Manage Demand
 
@@ -72,13 +106,12 @@ CRUD service for solverstack.
 
   ```json
   {
-    "demands": [{
+    "demand": [{
       "id": ,
       "latitude": ,
       "longitude": ,
       "quantity": ,
-      "unit": ,
-      "cluster_id":
+      "unit": 
       }
     ]
   }
@@ -88,12 +121,11 @@ CRUD service for solverstack.
 
   ```json
   {
-    "demands": [{
+    "demand": [{
       "latitude": ,
       "longitude": ,
       "quantity": ,
-      "unit": ,
-      "cluster_id":
+      "unit": 
       }
     ]
   }
@@ -136,31 +168,28 @@ CRUD service for solverstack.
 - **`CREATE`**
   This creates a default set of vehicles for the model to use.
 
-## Solution
+## Routes
 
-`Solution`s define inputs and their outputs via cvrp rpc.
+`Routes` define inputs and their outputs via vrp service.
 
 - `id`: integer
 - `demand_id`: integer
-- `origin_id`: integer
-- `vehicle_id`: float
+- `depot_id`: integer
+- `vehicle_id`: integer
 - `stop_number`: integer
-- `stop_distance`: float
 - `unit_id`: integer
 
-### Manage Solutions
+### Manage Routes
 
-This is what the end goal of the service is for our client.
-
-- **endpoint**: /solution
+- **endpoint**: /routes
 - **methods**: `GET`
 - **`GET` data expected:**
 
   ```json
   {
-    "solutions":[{
+    "routes": [{
     "demand_id": ,
-    "origin_id": ,
+    "depot_id": ,
     "vehicle_id": ,
     "stop_number": ,
     "unit": ""

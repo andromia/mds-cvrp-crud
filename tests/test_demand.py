@@ -21,8 +21,8 @@ class TestDemand:
         logging.debug(f'Demand Endpoint "{self.demand_endpoint}"')
 
     @pytest.fixture(scope="class")
-    def sample_demands(self):
-        """Return rows of sample demands from csv file"""
+    def sample_demand(self):
+        """Return rows of sample demand from csv file"""
 
         # Loading data from sample csv
         with open("tests/vrp_testing_data.csv") as sample_demand_file:
@@ -173,12 +173,12 @@ class TestDemand:
     def test_empty_demand(self, client):
         """Test by sending empty demand array"""
 
-        logging.info("Testing with empty demands array")
+        logging.info("Testing with empty demand array")
 
         res: Response = client.post(
             self.demand_endpoint,
             headers={"Content-Type": "application/json"},
-            json={"demands": []},
+            json={"demand": []},
         )
 
         logging.debug(f"Response : {res}")
@@ -188,7 +188,7 @@ class TestDemand:
         assert res.headers["Content-Type"] == "application/json"
 
         error_message = res.json["message"]
-        assert error_message == "'demands' is empty"
+        assert error_message == "'demand' is empty"
 
     @pytest.mark.parametrize(
         "param, value",
@@ -251,7 +251,7 @@ class TestDemand:
         res: Response = client.post(
             self.demand_endpoint,
             headers={"Content-Type": "application/json"},
-            json={"demands": [demand]},
+            json={"demand": [demand]},
         )
 
         assert res.status_code == 400
@@ -267,7 +267,7 @@ class TestDemand:
         res: Response = client.post(
             self.demand_endpoint,
             headers={"Content-Type": "application/json"},
-            json={"demands": [demand]},
+            json={"demand": [demand]},
         )
 
         logging.debug(f"Response : {res}")
@@ -281,21 +281,21 @@ class TestDemand:
             assert demand == response
             response["id"] = id
 
-    def test_batch_insert(self, client, sample_demands: List[dict]):
-        """Test with multiple demands"""
+    def test_batch_insert(self, client, sample_demand: List[dict]):
+        """Test with multiple demand"""
 
-        logging.info("Testing with multiple demands in one request")
+        logging.info("Testing with multiple demand in one request")
 
         res: Response = client.post(
             self.demand_endpoint,
             headers={"Content-Type": "application/json"},
-            json={"demands": sample_demands},
+            json={"demand": sample_demand},
         )
 
         assert res.status_code == 201
-        assert len(res.json) == len(sample_demands)
+        assert len(res.json) == len(sample_demand)
 
-        for demand, response in zip(sample_demands, res.json):
+        for demand, response in zip(sample_demand, res.json):
             id = response.pop("id")
             assert isinstance(id, int)
             assert demand == response

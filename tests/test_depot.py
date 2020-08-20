@@ -11,17 +11,17 @@ from typing import List, Dict
 from werkzeug.wrappers import Response
 
 
-class TestOrigin:
+class TestDepot:
     @pytest.fixture(autouse=True)
-    def set_origin_endpoint(self, api_base_url):
-        """Set origin endpoint as object variable"""
+    def set_depot_endpoint(self, api_base_url):
+        """Set depot endpoint as object variable"""
 
-        self.origin_endpoint: str = api_base_url + "/origin"
-        logging.debug(f'Origin Endpoint : "{self.origin_endpoint}"')
+        self.depot_endpoint: str = api_base_url + "/depot"
+        logging.debug(f'Depot Endpoint : "{self.depot_endpoint}"')
 
     @pytest.fixture()
-    def random_origin(self):
-        """Return random generated origin"""
+    def random_depot(self):
+        """Return random generated depot"""
 
         return {
             "latitude": random.uniform(-90, 90),
@@ -29,8 +29,8 @@ class TestOrigin:
         }
 
     @pytest.fixture(scope="class")
-    def random_origins(self, num_objects=20):
-        """Return list of random origins"""
+    def random_depots(self, num_objects=20):
+        """Return list of random depots"""
         return [
             {
                 "latitude": random.uniform(-90, 90),
@@ -118,7 +118,7 @@ class TestOrigin:
         logging.info(f"Testing with content-type : {content_type}")
 
         res: Response = client.post(
-            self.origin_endpoint, headers={"Content-Type": content_type}, data=""
+            self.depot_endpoint, headers={"Content-Type": content_type}, data=""
         )
 
         logging.debug(f"Response : {res}")
@@ -134,10 +134,10 @@ class TestOrigin:
         """Test with invalid JSON in request"""
 
         logging.info("Testing with invalid JSON")
-        logging.debug(f'Sending request to "{self.origin_endpoint}"')
+        logging.debug(f'Sending request to "{self.depot_endpoint}"')
 
         res: Response = client.post(
-            self.origin_endpoint,
+            self.depot_endpoint,
             headers={"Content-Type": "application/json"},
             data="".join(
                 random.choices(
@@ -154,15 +154,15 @@ class TestOrigin:
         assert res.headers["Content-Type"] == "application/json"
         assert res.json["message"] == "Invalid JSON received! Request data must be JSON"
 
-    def test_empty_origin(self, client):
-        """Test by sending empty origin array"""
+    def test_empty_depot(self, client):
+        """Test by sending empty depot array"""
 
-        logging.info("Testing with empty 'origins' array")
+        logging.info("Testing with empty 'depots' array")
 
         res: Response = client.post(
-            self.origin_endpoint,
+            self.depot_endpoint,
             headers={"Content-Type": "application/json"},
-            json={"origins": []},
+            json={"depots": []},
         )
 
         logging.debug(f"Response : {res}")
@@ -172,7 +172,7 @@ class TestOrigin:
         assert res.headers["Content-Type"] == "application/json"
 
         error_message = res.json["message"]
-        assert error_message == "'origins' is empty"
+        assert error_message == "'depots' is empty"
 
     @pytest.mark.parametrize(
         "param, value",
@@ -199,36 +199,36 @@ class TestOrigin:
             ("longitude", ""),
         ],
     )
-    def test_invalid_origin(self, client, param, value, random_origin: Dict):
-        """Test with invalid parameters in origin"""
+    def test_invalid_depot(self, client, param, value, random_depot: Dict):
+        """Test with invalid parameters in depot"""
 
-        origin = random_origin
-        logging.debug(f"Origin : {origin}")
+        depot = random_depot
+        logging.debug(f"Depot : {depot}")
 
-        origin[param] = value
+        depot[param] = value
 
-        logging.debug(f"Invalid origin : {origin}")
+        logging.debug(f"Invalid depot : {depot}")
 
         res: Response = client.post(
-            self.origin_endpoint,
+            self.depot_endpoint,
             headers={"Content-Type": "application/json"},
-            json={"origins": [origin]},
+            json={"depots": [depot]},
         )
 
         assert res.status_code == 400
         assert f"Invalid {param}" in res.json["message"]
 
-    def test_single_insert(self, client, random_origin: Dict):
-        """Test with single origin"""
+    def test_single_insert(self, client, random_depot: Dict):
+        """Test with single depot"""
 
-        origin = random_origin
+        depot = random_depot
 
-        logging.debug(f"origin : {origin}")
+        logging.debug(f"depot : {depot}")
 
         res: Response = client.post(
-            self.origin_endpoint,
+            self.depot_endpoint,
             headers={"Content-Type": "application/json"},
-            json={"origins": [origin]},
+            json={"depots": [depot]},
         )
 
         logging.debug(f"Response : {res}")
@@ -236,21 +236,21 @@ class TestOrigin:
 
         assert res.status_code == 201
         assert res.headers["Content-Type"] == "application/json"
-        for origin, response in zip([origin], res.json["origins"]):
+        for depot, response in zip([depot], res.json["depots"]):
             id = response.pop("id")
             assert isinstance(id, int)
-            assert origin == response
+            assert depot == response
             response["id"] = id
 
-    def test_multiple_insert(self, client, random_origins: List[Dict]):
+    def test_multiple_insert(self, client, random_depots: List[Dict]):
         """Test with multiple objects in array"""
 
-        logging.debug(f"Number of origins : {len(random_origins)}")
+        logging.debug(f"Number of depots : {len(random_depots)}")
 
         res: Response = client.post(
-            self.origin_endpoint,
+            self.depot_endpoint,
             headers={"Content-Type": "application/json"},
-            json={"origins": random_origins},
+            json={"depots": random_depots},
         )
 
         logging.debug(f"Response : {res}")
@@ -260,18 +260,18 @@ class TestOrigin:
         assert res.headers["Content-Type"] == "application/json"
         assert "contains more than one object" in res.json["message"]
 
-    def test_individual_get(self, client, random_origin):
-        """Test by inserting origin and GET from individual resource"""
+    def test_individual_get(self, client, random_depot):
+        """Test by inserting depot and GET from individual resource"""
 
-        origin = random_origin
-        origins = [origin]
+        depot = random_depot
+        depots = [depot]
 
-        logging.debug(f"Origin : {origin}")
+        logging.debug(f"Depot : {depot}")
 
         res: Response = client.post(
-            self.origin_endpoint,
+            self.depot_endpoint,
             headers={"Content-Type": "application/json"},
-            json={"origins": origins},
+            json={"depots": depots},
         )
 
         logging.debug(f"Response : {res}")
@@ -280,34 +280,34 @@ class TestOrigin:
         assert res.status_code == 201
         assert res.headers["Content-Type"] == "application/json"
 
-        for origin, response in zip(origins, res.json["origins"]):
+        for depot, response in zip(depots, res.json["depots"]):
             id = response.pop("id")
             assert isinstance(id, int)
-            assert origin == response
+            assert depot == response
             response["id"] = id
 
-            test_res = client.get(self.origin_endpoint + f"/{id}")
+            test_res = client.get(self.depot_endpoint + f"/{id}")
 
             logging.debug(f"Individual Response for id {id} : {test_res}")
             logging.debug(f"Individual Response Data : {test_res.data}")
 
-            individual_origin = test_res.json
-            individual_origin.pop("id")
+            individual_depot = test_res.json
+            individual_depot.pop("id")
             assert test_res.status_code == 200
             assert test_res.is_json
-            assert individual_origin == origin
+            assert individual_depot == depot
 
-    def test_individual_put(self, client, random_origin):
-        """Test by inserting origin and PUT from individual resource"""
+    def test_individual_put(self, client, random_depot):
+        """Test by inserting depot and PUT from individual resource"""
 
-        origins = [random_origin]
+        depots = [random_depot]
 
-        logging.debug(f"Origin : {random_origin}")
+        logging.debug(f"Depot : {random_depot}")
 
         res: Response = client.post(
-            self.origin_endpoint,
+            self.depot_endpoint,
             headers={"Content-Type": "application/json"},
-            json={"origins": origins},
+            json={"depots": depots},
         )
 
         logging.debug(f"Response : {res}")
@@ -316,14 +316,14 @@ class TestOrigin:
         assert res.status_code == 201
         assert res.is_json
 
-        for origin, response in zip(origins, res.json["origins"]):
+        for depot, response in zip(depots, res.json["depots"]):
             id = response.pop("id")
             assert isinstance(id, int)
             # PUT individual endpoint data
             test_res = client.put(
-                self.origin_endpoint + f"/{id}",
+                self.depot_endpoint + f"/{id}",
                 headers={"content-type": "application/json"},
-                json=random_origin,
+                json=random_depot,
             )
 
             logging.debug(f"Individual Response for id {id} : {test_res}")
@@ -331,7 +331,7 @@ class TestOrigin:
 
             assert test_res.status_code == 200
             assert test_res.is_json
-            individual_origin: dict = test_res.json
-            individual_origin.pop("id")
-            assert individual_origin == origin
+            individual_depot: dict = test_res.json
+            individual_depot.pop("id")
+            assert individual_depot == depot
 

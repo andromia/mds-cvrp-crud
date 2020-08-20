@@ -1,6 +1,6 @@
 from . import bp
 
-from app.models import Solution
+from app.models import Route
 
 
 @bp.route("/solution", methods=["POST"])

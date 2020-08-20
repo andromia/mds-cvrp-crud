@@ -1,10 +1,25 @@
-from .utils import timestamp
+from werkzeug.security import generate_password_hash
 
 from app import db, orm
+from app.utils import timestamp
 
 
 def create_fk(identifier: str, nullable: bool = False):
     return db.Column(db.Integer, db.ForeignKey(identifier), nullable=nullable)
+
+
+class User(db.Model):
+    __tablename__ = 'user'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(64), index=True, unique=True)
+    email = db.Column(db.String(120), index=True, unique=True)
+    password_hash = db.Column(db.String(128))
+
+    def __repr__(self):
+        return '<User {}>'.format(self.username)
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
 
 
 class Unit(db.Model):
@@ -26,18 +41,18 @@ class Unit(db.Model):
     name = db.Column(db.String(10))
 
 
-class Origin(db.Model):
+class Depot(db.Model):
     """
-    Origins defined by users. 
+    Depot defined by users. 
       - origin identifier
       - latitude
       - longitude
     """
 
-    __tablename__ = "origins"
+    __tablename__ = "depots"
 
     def __repr__(self):
-        return f"<Origin id='{self.id}' coordinates=({self.latitude},{self.longitude})>"
+        return f"<Depot id='{self.id}' coordinates=({self.latitude},{self.longitude})>"
 
     def to_dict(self):
         return {"id": self.id, "latitude": self.latitude, "longitude": self.longitude}
@@ -57,10 +72,7 @@ class Demand(db.Model):
       - cluster identifier for sub-problem spaces
     """
 
-    __tablename__ = "demands"
-
-    def __repr__(self):
-        return f"<Demand id='{self.id}'coordinates=({self.latitude},{self.longitude}) quantity='{self.quantity} {self.unit.name}' cluster_id='{self.cluster_id}'>"
+    __tablename__ = "demand"
 
     def to_dict(self):
         return {
@@ -108,40 +120,34 @@ class Vehicle(db.Model):
     unit = orm.relationship("Unit")
 
 
-class Solution(db.Model):
+class Route(db.Model):
     """
-    Solutions are results along with their mappings to resources used
+    Routes are results along with their mappings to resources used
     to produce them.
         - demand identifier
-        - origin identifier
-        - stop identifier
-        - output data
+        - depot identifier
+        - vehicle identifier
+        - stop number
     """
 
-    __tablename__ = "solutions"
-
-    def __repr__(self):
-        return f"<Solution id='{self.id}' origin=({self.origin.latitude},{self.origin.longitude}) demand_location=({self.demand.latitude},{self.demand.longitude}) vehicle='{self.vehicle.id}' stop number {self.stop_number} at {self.stop_distance} {self.unit.name}>"
+    __tablename__ = "routes"
 
     def to_dict(self):
         return {
             "id": self.id,
             "demand": self.demand.to_dict,
-            "origin": self.origin.to_dict,
+            "depot": self.depot.to_dict,
             "vehicle": self.vehicle,
-            "stop_number": self.stop_number,
-            "stop_distance": self.stop_distance,
-            "unit": self.unit.name,
+            "stop_number": self.stop_number
         }
 
     id = db.Column(db.Integer, primary_key=True)
-    demand_id = create_fk("demands.id")
+    demand_id = create_fk("demand.id")
     demand = orm.relationship("Demand")
-    origin_id = create_fk("origins.id")
-    origin = orm.relationship("Origin")
+    origin_id = create_fk("depots.id")
+    depot = orm.relationship("Depot")
     vehicle_id = create_fk("vehicles.id")
     vehicle = orm.relationship("Vehicle")
     stop_number = db.Column(db.Integer, nullable=False)
-    stop_distance = db.Column(db.Float, nullable=False)
     unit_id = create_fk("units.id")
     unit = orm.relationship("Unit")
