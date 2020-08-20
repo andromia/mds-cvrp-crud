@@ -55,7 +55,7 @@ def user():
 
 
 @bp.route("/user/<int:id>", methods=["GET", "PUT"])
-def origin(id: int):
+def user_one(id: int):
     if request.method == "GET":
         return User.query.get_or_404(id).to_dict()
     if request.method == "PUT":
@@ -84,7 +84,7 @@ def origin(id: int):
                 raise errors.InvalidUsage(f"{param} missing in request data")
 
         # Update values in DB
-        user.username = new_origin["latitude"]
+        user.username = new_user["latitude"]
         user.set_password(new_user["password"])
 
         db.session.commit()
