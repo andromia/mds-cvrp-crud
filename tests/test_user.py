@@ -11,15 +11,10 @@ import json
 
 
 def test_user_post(client, api_base_url):
-    input_data = {
-        "user": {
-            "username": "test",
-            "password": "test"
-        }
-    }
+    input_data = {"user": {"username": "test", "password": "test"}}
     logging.debug(f"input_data: {input_data}")
 
-    endpoint: str= api_base_url + "/user"
+    endpoint: str = api_base_url + "/user"
     logging.debug(f"endpoint: {endpoint}")
 
     response = client.post(endpoint, json=input_data)

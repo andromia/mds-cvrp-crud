@@ -23,7 +23,7 @@ class User(db.Model):
             "id": self.id,
             "username": self.username,
             "email": self.email,
-            "password_hash": self.password_hash
+            "password_hash": self.password_hash,
         }
 
     def set_password(self, password):
