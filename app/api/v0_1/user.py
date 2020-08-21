@@ -53,13 +53,13 @@ def user():
         return make_response(jsonify({"user": [new_user.to_dict()]}), 201)
 
 
-@bp.route("/user/<int:id>", methods=["GET", "PUT"])
-def user_one(id: int):
+@bp.route("/user/<string:username>", methods=["GET", "PUT"])
+def user_one(username: str):
     if request.method == "GET":
-        return User.query.get_or_404(id).to_dict()
+        return User.query.filter_by(username=username).first().to_dict()
     if request.method == "PUT":
 
-        user: User = User.query.get_or_404(id)
+        user: User = User.query.filter_by(username=username).first()
 
         if not request.is_json:
             raise errors.InvalidUsage(

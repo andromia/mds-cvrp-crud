@@ -10,14 +10,25 @@ import pytest
 import json
 
 
-def test_user_post(client, api_base_url):
-    input_data = {"user": {"username": "test", "password": "test"}}
-    logging.debug(f"input_data: {input_data}")
+ENDPOINT: str = f"/api/{__version__}/user"
+TEST_USER: dict = {
+    "username": "test",
+    "password": "password"
+}
 
-    endpoint: str = api_base_url + "/user"
-    logging.debug(f"endpoint: {endpoint}")
 
-    response = client.post(endpoint, json=input_data)
+def test_user(client):
+    logging.debug(f"input_data: {TEST_USER}")
+    logging.debug(f"endpoint: {ENDPOINT}")
+
+    response = client.post(ENDPOINT, json={"user": TEST_USER})
     output = json.loads(response.data)
 
     assert output
+
+    logging.debug(f"username: {TEST_USER['username']}")
+
+    response = client.get(f"{ENDPOINT}/{TEST_USER['username']}")
+    output = json.loads(response.data)
+
+    assert output["username"] == TEST_USER["username"]
