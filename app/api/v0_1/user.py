@@ -56,7 +56,15 @@ def user():
 @bp.route("/user/<string:username>", methods=["GET", "PUT"])
 def user_one(username: str):
     if request.method == "GET":
-        return User.query.filter_by(username=username).first().to_dict()
+        user =  User.query.filter_by(username=username).first()
+
+        if not user:
+            raise errors.InvalidUsage(
+                "username not found"
+            )
+
+        return user.to_dict()        
+
     if request.method == "PUT":
 
         user: User = User.query.filter_by(username=username).first()
