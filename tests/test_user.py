@@ -11,10 +11,7 @@ import json
 
 
 ENDPOINT: str = f"/api/{__version__}/user"
-TEST_USER: dict = {
-    "username": "test",
-    "password": "password"
-}
+TEST_USER: dict = {"username": "test", "password": "password"}
 
 
 def test_user(client):
