@@ -4,14 +4,12 @@ import os
 from flask import Flask, request, current_app
 from flask_sqlalchemy import SQLAlchemy, orm
 from flask_migrate import Migrate
-from flask_caching import Cache
 from config import Config
 
 __version__ = "v0.1"
 
 db = SQLAlchemy()
 migrate = Migrate()
-cache = Cache()
 
 
 def create_app(config_class=Config):
@@ -20,7 +18,6 @@ def create_app(config_class=Config):
 
     db.init_app(app)
     migrate.init_app(app, db)
-    cache.init_app(app)
 
     from app.api.v0_1 import bp as api_bp
 
