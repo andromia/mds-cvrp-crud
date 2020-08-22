@@ -26,6 +26,6 @@ def test_user(client):
     logging.debug(f"username: {TEST_USER['username']}")
 
     response = client.get(f"{ENDPOINT}/{TEST_USER['username']}")
-    output = json.loads(response.data)
+    user = json.loads(response.data)["user"]
 
-    assert output["username"] == TEST_USER["username"]
+    assert user["username"] == TEST_USER["username"]

@@ -15,7 +15,8 @@ def user():
 
     if request.method == "GET":
         user = User.query.get_or_404(1).to_dict()
-        return jsonify({"user": user})
+
+        return make_response({"user": user}, 200)
 
     if request.method == "POST":
 
@@ -50,20 +51,18 @@ def user():
 
         user["id"] = new_user.id
 
-        return make_response(jsonify({"user": [new_user.to_dict()]}), 201)
+        return make_response({"user": new_user.to_dict()}, 201)
 
 
 @bp.route("/user/<string:username>", methods=["GET", "PUT"])
 def user_one(username: str):
     if request.method == "GET":
-        user =  User.query.filter_by(username=username).first()
+        user = User.query.filter_by(username=username).first()
 
         if not user:
-            raise errors.InvalidUsage(
-                "username not found"
-            )
+            raise errors.InvalidUsage("username not found")
 
-        return user.to_dict()        
+        return make_response({"user": user.to_dict()}, 200)
 
     if request.method == "PUT":
 
@@ -96,4 +95,4 @@ def user_one(username: str):
 
         db.session.commit()
 
-        return make_response(jsonify(new_user.to_dict()), 200)
+        return make_response(new_user.to_dict(), 201)
