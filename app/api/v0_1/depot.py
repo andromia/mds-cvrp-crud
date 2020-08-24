@@ -77,7 +77,7 @@ def depots():
         Depot.query.delete()
 
         # Filtering the dict
-        params = ["latitude", "longitude"]
+        params = ["latitude", "longitude", "user_id"]
         depot = {param: depot[param] for param in params}
 
         # Using dict unpacking for creation
@@ -110,7 +110,7 @@ def depot(id: int):
                 "Invalid JSON received! Request data must be JSON"
             )
 
-        params = ["latitude", "longitude"]
+        params = ["latitude", "longitude", "user_id"]
 
         new_depot: Dict[str, any] = {}
 
@@ -126,6 +126,7 @@ def depot(id: int):
         # Update values in DB
         depot.latitude = new_depot["latitude"]
         depot.longitude = new_depot["longitude"]
+        depot.user_id = new_depot["user_id"]
 
         db.session.commit()
 

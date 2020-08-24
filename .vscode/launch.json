@@ -19,6 +19,26 @@
             "module": "pytest",
             "cwd": "${workspaceRoot}",
             "args": ["tests/test_user.py"]
+        },
+        {
+            "name": "depot tests",
+            "type": "python",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "pythonPath": "${workspaceRoot}/venv/Scripts/python.exe",
+            "module": "pytest",
+            "cwd": "${workspaceRoot}",
+            "args": ["tests/test_depot.py"]
+        },
+        {
+            "name": "demand tests",
+            "type": "python",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "pythonPath": "${workspaceRoot}/venv/Scripts/python.exe",
+            "module": "pytest",
+            "cwd": "${workspaceRoot}",
+            "args": ["tests/test_demand.py"]
         }
     ]
 }

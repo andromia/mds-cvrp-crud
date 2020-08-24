@@ -38,6 +38,7 @@ class TestDemand:
             demand["quantity"] = float(demand.pop("weight")) / 10
             demand["unit"] = "kilograms"
             demand["cluster_id"] = int(demand.pop("pallets")) % NUM_CLUSTERS
+            demand["user_id"] = 1
 
         return sample_demand_rows
 
@@ -53,6 +54,7 @@ class TestDemand:
             "unit": "".join(
                 random.choices(string.ascii_lowercase, k=random.randint(1, 10))
             ),
+            "user_id": 1,
         }
 
     @pytest.mark.parametrize(

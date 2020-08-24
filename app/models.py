@@ -43,10 +43,11 @@ class Unit(db.Model):
         return f"<Unit id='{self.id}' name='{self.name}'>"
 
     def to_dict(self):
-        return {"id": self.id, "name": self.name}
+        return {"id": self.id, "name": self.name, "user_id": self.user_id}
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(10))
+    user_id = create_fk("user.id")
 
 
 class Depot(db.Model):
@@ -63,11 +64,17 @@ class Depot(db.Model):
         return f"<Depot id='{self.id}' coordinates=({self.latitude},{self.longitude})>"
 
     def to_dict(self):
-        return {"id": self.id, "latitude": self.latitude, "longitude": self.longitude}
+        return {
+            "id": self.id,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "user_id": self.user_id,
+        }
 
     id = db.Column(db.Integer, primary_key=True)
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
+    user_id = create_fk("user.id")
 
 
 class Demand(db.Model):
@@ -90,6 +97,7 @@ class Demand(db.Model):
             "unit": self.unit.name,
             "quantity": self.quantity,
             "cluster_id": self.cluster_id,
+            "user_id": self.user_id,
         }
 
     id = db.Column(db.Integer, primary_key=True)
@@ -99,6 +107,7 @@ class Demand(db.Model):
     unit_id = create_fk("units.id")
     unit = orm.relationship("Unit")
     cluster_id = db.Column(db.Integer)
+    user_id = create_fk("user.id")
 
 
 class Vehicle(db.Model):
@@ -120,12 +129,14 @@ class Vehicle(db.Model):
             "id": self.id,
             "capacity": self.capacity,
             "unit": self.unit,
+            "user_id": self.user_id,
         }
 
     id = db.Column(db.Integer, primary_key=True)
     capacity = db.Column(db.Float, nullable=False)
     unit_id = create_fk("units.id")
     unit = orm.relationship("Unit")
+    user_id = create_fk("user.id")
 
 
 class Route(db.Model):
@@ -147,6 +158,7 @@ class Route(db.Model):
             "depot": self.depot.to_dict,
             "vehicle": self.vehicle,
             "stop_number": self.stop_number,
+            "user_id": self.user_id,
         }
 
     id = db.Column(db.Integer, primary_key=True)
@@ -159,3 +171,4 @@ class Route(db.Model):
     stop_number = db.Column(db.Integer, nullable=False)
     unit_id = create_fk("units.id")
     unit = orm.relationship("Unit")
+    user_id = create_fk("user.id")

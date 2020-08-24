@@ -88,7 +88,7 @@ def demand():
         if not demand:
             raise errors.InvalidUsage("'demand' is empty")
 
-        params = ["latitude", "longitude", "cluster_id", "unit", "quantity"]
+        params = ["latitude", "longitude", "cluster_id", "unit", "quantity", "user_id"]
 
         # Checking if each element is valid
         for d in demand:
@@ -104,15 +104,16 @@ def demand():
 
         # Adding demand to database
         for d in demand:
-            unit = Unit.query.filter_by(name=d["unit"]).first()
+            unit = Unit.query.filter_by(name=d["unit"], user_id=d["user_id"]).first()
             if unit is None:
-                unit = Unit(name=d["unit"])
+                unit = Unit(name=d["unit"], user_id=d["user_id"])
                 logging.debug(f"Created unit {unit}")
             demand_entry = Demand(
                 latitude=d["latitude"],
                 longitude=d["longitude"],
                 quantity=d["quantity"],
                 unit=unit,
+                user_id=d["user_id"],
             )
             db.session.add(demand_entry)
             demand_entries.append(demand_entry)
@@ -157,9 +158,11 @@ def demand_one(id: int):
         check_demand(new_demand)
 
         # Update values in DB
-        unit = Unit.query.filter_by(name=new_demand["unit"]).first()
+        unit = Unit.query.filter_by(
+            name=new_demand["unit"], user_id=new_demand["user_id"]
+        ).first()
         if unit is None:
-            unit = Unit(name=new_demand["unit"])
+            unit = Unit(name=new_demand["unit"], user_id=new_demand["user_id"])
             logging.debug(f"Created unit {unit}")
 
         demand.latitude = new_demand["latitude"]
@@ -167,6 +170,7 @@ def demand_one(id: int):
         demand.quantity = new_demand["quantity"]
         demand.cluster_id = new_demand["cluster_id"]
         demand.unit = unit
+        demand.user_id = new_demand["user_id"]
 
         db.session.commit()
 

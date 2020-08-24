@@ -26,6 +26,7 @@ class TestDepot:
         return {
             "latitude": random.uniform(-90, 90),
             "longitude": random.uniform(-180, 180),
+            "user_id": 1,
         }
 
     @pytest.fixture(scope="class")
@@ -35,6 +36,7 @@ class TestDepot:
             {
                 "latitude": random.uniform(-90, 90),
                 "longitude": random.uniform(-180, 180),
+                "user_id": 1,
             }
             for i in range(num_objects)
         ]

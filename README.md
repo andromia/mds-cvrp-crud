@@ -17,7 +17,7 @@ CRUD service for solverstack.
 - `id`: integer
 - `username`: string
 - `email`: string
-- `password`: hashed-string
+- `password_hash`: hashed-string
 
 ### Manage Users
 
@@ -25,13 +25,15 @@ CRUD service for solverstack.
 - **methods**: `GET`, `POST`
 - **`GET` data expected:**
 
+**NOTE**: `password_hash` will not be returned in regular `User` `GET`s
+
   ```json
   {
     "user": {
       "id": "",
       "username": "",
       "email": "",
-      "hashed_password": ""
+      "password_hash": ""
     }
   }
   ```
@@ -53,6 +55,7 @@ CRUD service for solverstack.
 
 - `id`: integer
 - `name`: string ('pallets', 'weight', 'miles')
+- `user_id`: integer
 
 ## Depot
 
@@ -61,6 +64,7 @@ CRUD service for solverstack.
 - `id`: integer
 - `latitude`: float
 - `latitude`: float
+- `user_id`: integer
 
 ### Manage Depots
 
@@ -73,7 +77,8 @@ CRUD service for solverstack.
     "depot": {
       "id": "",
       "latitude": "",
-      "latitude": ""
+      "latitude": "",
+      "user_id": ""
     }
   }
   ```
@@ -84,19 +89,21 @@ CRUD service for solverstack.
   {
     "depot" : {
     "latitude": "",
-    "latitude": ""
+    "latitude": "",
+    "user_id": ""
   }
   ```
 
 ## Demand
 
-`Demand` is each node with capacity to route:
+`Demand` is each node with capacity to be routed:
 
 - `id`: integer
 - `latitude`: float
 - `longitude`: float
 - `quantity`: float
 - `unit_id`: integer
+- `user_id`: integer
 
 ### Manage Demand
 
@@ -107,11 +114,12 @@ CRUD service for solverstack.
   ```json
   {
     "demand": [{
-      "id": ,
-      "latitude": ,
-      "longitude": ,
-      "quantity": ,
-      "unit": 
+      "id": "",
+      "latitude": "",
+      "longitude": "",
+      "quantity": "",
+      "unit": "",
+      "user_id": ""
       }
     ]
   }
@@ -122,10 +130,11 @@ CRUD service for solverstack.
   ```json
   {
     "demand": [{
-      "latitude": ,
-      "longitude": ,
-      "quantity": ,
-      "unit": 
+      "latitude": "",
+      "longitude": "",
+      "quantity": "",
+      "unit": "",
+      "user_id": ""
       }
     ]
   }
@@ -133,11 +142,12 @@ CRUD service for solverstack.
 
 ## Vehicle
 
-`Vehicle`s are resources describing vehicle capacity and number of vehicles:
+`Vehicle`s are resources describing vehicle capacity and its availability:
 
 - `id`: integer
 - `capacity`: integer
-- `unit_id`: integer
+- `unit_id`: integer,
+- `user_id`: integer
 
 ### Manage Vehicles
 
@@ -148,8 +158,9 @@ CRUD service for solverstack.
   ```json
   {
     "vehicles" : [{
-      "capacity": ,
-      "unit": ""
+      "capacity": "",
+      "unit": "", 
+      "user_id": ""
     }]
   }
   ```
@@ -159,8 +170,9 @@ CRUD service for solverstack.
   ```json
   {
     "vehicles" : [{
-      "capacity": ,
-      "unit": ""
+      "capacity": "",
+      "unit": "", 
+      "user_id": ""
     }]
   }
   ```
@@ -178,6 +190,7 @@ CRUD service for solverstack.
 - `vehicle_id`: integer
 - `stop_number`: integer
 - `unit_id`: integer
+- `user_id`: integer
 
 ### Manage Routes
 
@@ -188,11 +201,12 @@ CRUD service for solverstack.
   ```json
   {
     "routes": [{
-    "demand_id": ,
-    "depot_id": ,
-    "vehicle_id": ,
-    "stop_number": ,
-    "unit": ""
+    "demand_id": "",
+    "depot_id": "",
+    "vehicle_id": "",
+    "stop_number": "",
+    "unit": "",
+    "user_id": ""
     }],
   }
   ```
