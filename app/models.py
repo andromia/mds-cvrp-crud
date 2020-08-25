@@ -39,7 +39,49 @@ class User(db.Model):
         self.password_hash = generate_password_hash(password)
 
 
-class Geocode:
+class Stack(db.Model):
+    """
+    solverstack unique Stacks created.
+      - stack identifier
+      - stack name
+      - user identifier
+    """
+
+    __tablename__ = "stacks"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(25), nullable=False)
+    user_id = create_fk("users.id")
+
+    def __repr__(self):
+        return f"<Stack {self.name}>"
+
+    def to_dict(self):
+        return {"id": self.id, "name": self.name, "user_id": self.user_id}
+
+
+class StackChain(db.Model):
+    """
+    Relationship detail on solverstack Stacks.
+      - chain identifier
+      - stack identifier
+      - chained stack identifier
+    """
+
+    __tablename__ = "chained_stacks"
+
+    id = db.Column(db.Integer, primary_key=True)
+    stack_id = create_fk("stacks.id")
+    chained_id = create_fk("stacks.id")
+
+    def __repr__(self):
+        return f"<StackChain ({self.stack_id, self.chained_id})>"
+
+    def to_dict(self):
+        return {"id": self.id, "stack_id": self.stack_id, "chained_id": self.chained_id}
+
+
+class Geocode(db.Model):
     """
     Location data with latitudes and longitudes.
       - location identifier

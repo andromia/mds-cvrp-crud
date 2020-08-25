@@ -21,7 +21,7 @@ ROUTES = [
 ]
 
 
-def test_route_enpoint(client):
+def test_route_endpoint(client):
     logging.debug(f"input_data: {common.TEST_USER}")
     logging.debug(f"endpoint: {ENDPOINT}")
 

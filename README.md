@@ -25,7 +25,7 @@ CRUD service for solverstack.
 - **methods**: `GET`, `POST`
 - **`GET` data expected:**
 
-**NOTE**: `password_hash` will not be returned in regular `User` `GET`s
+  **NOTE**: `password_hash` will not be returned in regular `User` `GET`s
 
   ```json
   {
@@ -49,29 +49,25 @@ CRUD service for solverstack.
   }
   ```
 
-## Depot
-
-`Depot`s are points of origin consisting of:
+## Stacks
 
 - `id`: integer
-- `latitude`: float
-- `latitude`: float
+- `name`: string
 - `user_id`: integer
 
-### Manage Depots
+### Manage Stacks
 
-- **endpoint**: /depot
+- **endpoint**: /stacks
 - **methods**: `GET`, `POST`
 - **`GET` data expected:**
 
   ```json
   {
-    "depot": {
+    "stacks": [{
       "id": "",
-      "latitude": "",
-      "latitude": "",
+      "name": "",
       "user_id": ""
-    }
+    }]
   }
   ```
 
@@ -79,10 +75,13 @@ CRUD service for solverstack.
 
   ```json
   {
-    "depot" : {
-    "latitude": "",
-    "latitude": "",
-    "user_id": ""
+    "stack" : {
+      "name": ""
+    },
+    "chain": [{
+      "id": "",
+      "name": ""
+    }]
   }
   ```
 
@@ -132,6 +131,41 @@ CRUD service for solverstack.
   }
   ```
 
+## Depot
+
+`Depot`s are points of origin consisting of:
+
+- `id`: integer
+- `latitude`: float
+- `latitude`: float
+
+### Manage Depots
+
+- **endpoint**: /depot
+- **methods**: `GET`, `POST`
+- **`GET` data expected:**
+
+  ```json
+  {
+    "depot": {
+      "id": "",
+      "latitude": "",
+      "latitude": "",
+      "user_id": ""
+    }
+  }
+  ```
+
+- **`POST` data required:**
+
+  ```json
+  {
+    "depot" : {
+    "latitude": "",
+    "latitude": ""
+  }
+  ```
+
 ## Demand
 
 `Demand` is each node with capacity to be routed:
@@ -141,7 +175,6 @@ CRUD service for solverstack.
 - `longitude`: float
 - `quantity`: float
 - `unit_id`: integer
-- `user_id`: integer
 
 ### Manage Demand
 
@@ -171,10 +204,8 @@ CRUD service for solverstack.
       "latitude": "",
       "longitude": "",
       "quantity": "",
-      "unit": "",
-      "user_id": ""
-      }
-    ]
+      "unit": ""
+    }]
   }
   ```
 
@@ -205,6 +236,21 @@ CRUD service for solverstack.
     "stop_number": "",
     "unit": "",
     "user_id": ""
+    }],
+  }
+  ```
+
+
+- **`POST` data expected:**
+
+  ```json
+  {
+    "routes": [{
+    "demand_id": "",
+    "depot_id": "",
+    "vehicle_id": "",
+    "stop_number": "",
+    "unit": ""
     }],
   }
   ```
