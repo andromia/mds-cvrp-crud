@@ -1,22 +1,17 @@
-from . import common
-from app import create_app, db
-from app import __version__
-
-from config import Config
-
-import tempfile
 import logging
 import pytest
 import json
 
 from . import common
 
+from config import Config
+
 
 ENDPOINT: str = f"{common.BASE_URL}/user"
 TEST_USER: dict = {"username": "test", "password": "password"}
 
 
-def test_user(client):
+def test_user_endpoint(client):
     logging.debug(f"input_data: {TEST_USER}")
     logging.debug(f"endpoint: {ENDPOINT}")
 

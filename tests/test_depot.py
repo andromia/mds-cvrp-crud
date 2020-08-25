@@ -1,10 +1,8 @@
 import pytest
 import logging
 import json
-
 import random
 import string
-
 from typing import List, Dict
 
 # from flask import FlaskClient

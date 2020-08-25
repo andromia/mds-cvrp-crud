@@ -4,11 +4,9 @@ from unittest.mock import patch
 import pytest
 import logging
 import json
-
 import string
 import random
 from csv import DictReader
-
 from typing import List
 
 from . import common

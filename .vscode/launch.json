@@ -39,6 +39,16 @@
             "module": "pytest",
             "cwd": "${workspaceRoot}",
             "args": ["tests/test_demand.py"]
+        },
+        {
+            "name": "geocode tests",
+            "type": "python",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "pythonPath": "${workspaceRoot}/venv/Scripts/python.exe",
+            "module": "pytest",
+            "cwd": "${workspaceRoot}",
+            "args": ["tests/test_geocode.py"]
         }
     ]
 }

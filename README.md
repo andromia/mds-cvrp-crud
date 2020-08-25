@@ -86,6 +86,52 @@ CRUD service for solverstack.
   }
   ```
 
+## Geocodes
+
+`Geocodes` is a location with latitude and longitudes:
+
+- `id`: integer
+- `zipcode`: string
+- `country`: string
+- `latitude`: float
+- `longitude`: float
+- `user_id`: integer
+
+### Manage Geocodes
+
+- **endpoint**: /geocodes
+- **methods**: `GET`, `POST`
+- **`GET` data expected:**
+
+  ```json
+  {
+    "geocodes": [{
+      "id": "",
+      "zipcode": "",
+      "country": "",
+      "latitude": "",
+      "longitude": "",
+      "user_id": ""
+      }
+    ]
+  }
+  ```
+
+- **`POST` data required:**
+
+  ```json
+  {
+    "geocodes": [{
+      "zipcode": "",
+      "country": "",
+      "latitude": "",
+      "longitude": "",
+      "user_id": ""
+      }
+    ]
+  }
+  ```
+
 ## Demand
 
 `Demand` is each node with capacity to be routed:
