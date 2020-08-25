@@ -7,7 +7,7 @@ from typing import Dict, Union
 
 from app import db
 
-from app.models import Depot, Unit
+from app.models import Depot
 
 
 def is_float(x: any):

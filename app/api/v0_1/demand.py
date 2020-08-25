@@ -9,7 +9,7 @@ from typing import Dict, Union
 
 from app import db
 
-from app.models import Demand, Unit
+from app.models import Demand
 
 
 def is_float(x: any):
@@ -105,15 +105,11 @@ def demand():
 
         # Adding demand to database
         for d in demand:
-            unit = Unit.query.filter_by(name=d["unit"], user_id=d["user_id"]).first()
-            if unit is None:
-                unit = Unit(name=d["unit"], user_id=d["user_id"])
-                logging.debug(f"Created unit {unit}")
             demand_entry = Demand(
                 latitude=d["latitude"],
                 longitude=d["longitude"],
                 quantity=d["quantity"],
-                unit=unit,
+                unit=d["unit"],
                 user_id=d["user_id"],
             )
             db.session.add(demand_entry)
@@ -158,19 +154,11 @@ def demand_one(id: int):
         # Validate demand
         check_demand(new_demand)
 
-        # Update values in DB
-        unit = Unit.query.filter_by(
-            name=new_demand["unit"], user_id=new_demand["user_id"]
-        ).first()
-        if unit is None:
-            unit = Unit(name=new_demand["unit"], user_id=new_demand["user_id"])
-            logging.debug(f"Created unit {unit}")
-
         demand.latitude = new_demand["latitude"]
         demand.longitude = new_demand["longitude"]
         demand.quantity = new_demand["quantity"]
         demand.cluster_id = new_demand["cluster_id"]
-        demand.unit = unit
+        demand.unit = new_demand["unit"]
         demand.user_id = new_demand["user_id"]
 
         db.session.commit()
