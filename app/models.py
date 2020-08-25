@@ -36,6 +36,7 @@ class Depot(db.Model):
       - origin identifier
       - latitude
       - longitude
+      - user identifier
     """
 
     __tablename__ = "depots"
@@ -64,6 +65,7 @@ class Demand(db.Model):
       - geocodes (latitude & longitude)
       - units for capacity constraint
       - cluster identifier for sub-problem spaces
+      - user identifier
     """
 
     __tablename__ = "demand"
@@ -88,40 +90,12 @@ class Demand(db.Model):
     user_id = create_fk("users.id")
 
 
-class Vehicle(db.Model):
-    """
-    Vehicle is defined by capacity and other configurables to be used.
-      - vehicle identifier (pk)
-      - max capacity constraint
-      - unit identifier (fk)
-      - asset class identifier (fk)
-    """
-
-    __tablename__ = "vehicles"
-
-    def __repr__(self):
-        return f"<Vehicle id='{self.id}' capacity='{self.capacity} {self.unit.name}'>"
-
-    def to_dict(self):
-        return {
-            "id": self.id,
-            "capacity": self.capacity,
-            "unit": self.unit,
-            "user_id": self.user_id,
-        }
-
-    id = db.Column(db.Integer, primary_key=True)
-    capacity = db.Column(db.Float, nullable=False)
-    user_id = create_fk("users.id")
-
-
 class Route(db.Model):
     """
     Routes are results along with their mappings to resources used
     to produce them.
         - demand identifier
         - depot identifier
-        - vehicle identifier
         - stop number
     """
 
@@ -130,9 +104,8 @@ class Route(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
-            "demand": self.demand.to_dict,
-            "depot": self.depot.to_dict,
-            "vehicle": self.vehicle,
+            "demand": self.demand_id,
+            "depot": self.depot_id,
             "stop_number": self.stop_number,
             "user_id": self.user_id,
         }
@@ -140,6 +113,5 @@ class Route(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     demand_id = create_fk("demand.id")
     depot_id = create_fk("depots.id")
-    vehicle_id = create_fk("vehicles.id")
     stop_number = db.Column(db.Integer, nullable=False)
-    user = create_fk("users.id")
+    user_id = create_fk("users.id")

@@ -49,14 +49,6 @@ CRUD service for solverstack.
   }
   ```
 
-## Unit
-
-`Unit`s are different _unit of measures_ used (pallets, weight, miles).
-
-- `id`: integer
-- `name`: string ('pallets', 'weight', 'miles')
-- `user_id`: integer
-
 ## Depot
 
 `Depot`s are points of origin consisting of:
@@ -140,46 +132,6 @@ CRUD service for solverstack.
   }
   ```
 
-## Vehicle
-
-`Vehicle`s are resources describing vehicle capacity and its availability:
-
-- `id`: integer
-- `capacity`: integer
-- `unit_id`: integer,
-- `user_id`: integer
-
-### Manage Vehicles
-
-- **endpoint**: /vehicles
-- **methods**: `GET`, `POST`, `CREATE`
-- **`GET` data expected:**
-
-  ```json
-  {
-    "vehicles" : [{
-      "capacity": "",
-      "unit": "", 
-      "user_id": ""
-    }]
-  }
-  ```
-
-- **`POST` data required:**
-
-  ```json
-  {
-    "vehicles" : [{
-      "capacity": "",
-      "unit": "", 
-      "user_id": ""
-    }]
-  }
-  ```
-
-- **`CREATE`**
-  This creates a default set of vehicles for the model to use.
-
 ## Routes
 
 `Routes` define inputs and their outputs via vrp service.
@@ -187,7 +139,6 @@ CRUD service for solverstack.
 - `id`: integer
 - `demand_id`: integer
 - `depot_id`: integer
-- `vehicle_id`: integer
 - `stop_number`: integer
 - `unit_id`: integer
 - `user_id`: integer
@@ -203,7 +154,6 @@ CRUD service for solverstack.
     "routes": [{
     "demand_id": "",
     "depot_id": "",
-    "vehicle_id": "",
     "stop_number": "",
     "unit": "",
     "user_id": ""
