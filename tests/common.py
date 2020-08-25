@@ -4,7 +4,7 @@ from app import create_app, __version__
 from config import Config
 
 
-BASE_URL = f"/api/{__version__}"
+BASE_URL: str = f"/api/{__version__}"
 
 
 class TestConfig(Config):
