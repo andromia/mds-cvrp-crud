@@ -2,6 +2,7 @@ from . import bp
 from . import errors
 
 from flask import request, jsonify, make_response
+from flask_jwt_extended import jwt_required
 
 import logging
 from typing import Dict, Union
@@ -62,11 +63,11 @@ def check_demand(demand: Dict[str, str]):
 
 
 @bp.route("/demand", methods=["GET", "POST"])
+@jwt_required
 def demand():
 
     if request.method == "GET":
         return jsonify([demand.to_dict() for demand in Demand.query.all()])
-        # return jsonify(Demand.query.all())
 
     if request.method == "POST":
         if not request.is_json:

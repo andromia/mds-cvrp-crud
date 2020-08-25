@@ -1,3 +1,6 @@
+# from flask import FlaskClient
+from werkzeug.wrappers import Response
+from unittest.mock import patch
 import pytest
 import logging
 import json
@@ -8,16 +11,14 @@ from csv import DictReader
 
 from typing import List
 
-# from flask import FlaskClient
-from werkzeug.wrappers import Response
+from . import common
 
 
 class TestDemand:
     @pytest.fixture(autouse=True)
-    def set_demand_endpoint(self, api_base_url):
+    def set_demand_endpoint(self):
         """Set demand endpoint as object variable"""
-
-        self.demand_endpoint: str = api_base_url + "/demand"
+        self.demand_endpoint: str = common.BASE_URL + "/demand"
         logging.debug(f'Demand Endpoint "{self.demand_endpoint}"')
 
     @pytest.fixture(scope="class")
@@ -135,9 +136,9 @@ class TestDemand:
 
         logging.info(f"Testing with content-type : {content_type}")
 
-        res: Response = client.post(
-            self.demand_endpoint, headers={"Content-Type": content_type}, data=""
-        )
+        HEADERS = dict(common.AUTH_HEADER, **{"Content-Type": content_type})
+
+        res: Response = client.post(self.demand_endpoint, headers=HEADERS, data="")
 
         logging.debug(f"Response : {res}")
         logging.debug(f"Response Data : {res.data}")
@@ -154,9 +155,11 @@ class TestDemand:
         logging.info("Testing with invalid JSON")
         logging.debug(f'Sending request to "{self.demand_endpoint}"')
 
+        HEADERS = dict(common.AUTH_HEADER, **{"Content-Type": "application/json"})
+
         res: Response = client.post(
             self.demand_endpoint,
-            headers={"Content-Type": "application/json"},
+            headers=HEADERS,
             data="".join(
                 random.choices(
                     string.ascii_letters + "".join(["{", "}", '"', "'"]),
@@ -177,10 +180,10 @@ class TestDemand:
 
         logging.info("Testing with empty demand array")
 
+        HEADERS = dict(common.AUTH_HEADER, **{"Content-Type": "application/json"})
+
         res: Response = client.post(
-            self.demand_endpoint,
-            headers={"Content-Type": "application/json"},
-            json={"demand": []},
+            self.demand_endpoint, headers=HEADERS, json={"demand": []},
         )
 
         logging.debug(f"Response : {res}")
@@ -247,13 +250,12 @@ class TestDemand:
         logging.debug(f"Demand : {demand}")
 
         demand[param] = value
-
         logging.debug(f"Invalid Demand : {demand}")
 
+        HEADERS = dict(common.AUTH_HEADER, **{"Content-Type": "application/json"})
+
         res: Response = client.post(
-            self.demand_endpoint,
-            headers={"Content-Type": "application/json"},
-            json={"demand": [demand]},
+            self.demand_endpoint, headers=HEADERS, json={"demand": [demand]},
         )
 
         assert res.status_code == 400
@@ -263,13 +265,12 @@ class TestDemand:
         """Test with single demand"""
 
         demand = random_demand
-
         logging.debug(f"Demand : {demand}")
 
+        HEADERS = dict(common.AUTH_HEADER, **{"Content-Type": "application/json"})
+
         res: Response = client.post(
-            self.demand_endpoint,
-            headers={"Content-Type": "application/json"},
-            json={"demand": [demand]},
+            self.demand_endpoint, headers=HEADERS, json={"demand": [demand]},
         )
 
         logging.debug(f"Response : {res}")
@@ -277,6 +278,7 @@ class TestDemand:
 
         assert res.status_code == 201
         assert res.headers["Content-Type"] == "application/json"
+
         for demand, response in zip([demand], res.json):
             id = response.pop("id")
             assert isinstance(id, int)
@@ -288,10 +290,10 @@ class TestDemand:
 
         logging.info("Testing with multiple demand in one request")
 
+        HEADERS = dict(common.AUTH_HEADER, **{"Content-Type": "application/json"})
+
         res: Response = client.post(
-            self.demand_endpoint,
-            headers={"Content-Type": "application/json"},
-            json={"demand": sample_demand},
+            self.demand_endpoint, headers=HEADERS, json={"demand": sample_demand},
         )
 
         assert res.status_code == 201

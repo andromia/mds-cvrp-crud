@@ -9,8 +9,10 @@ import logging
 import pytest
 import json
 
+from . import common
 
-ENDPOINT: str = f"/api/{__version__}/user"
+
+ENDPOINT: str = f"{common.BASE_URL}/user"
 TEST_USER: dict = {"username": "test", "password": "password"}
 
 

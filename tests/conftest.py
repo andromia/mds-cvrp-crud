@@ -5,7 +5,6 @@ import tempfile
 from config import Config
 
 from app import create_app, db
-from app import __version__
 import logging
 
 
@@ -35,8 +34,3 @@ def client():
     # Removing temp test db
     os.close(db_fd)
     os.unlink(db_filepath)
-
-
-@pytest.fixture(scope="module")
-def api_base_url():
-    return f"/api/{__version__}"

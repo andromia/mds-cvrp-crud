@@ -10,13 +10,15 @@ from typing import List, Dict
 # from flask import FlaskClient
 from werkzeug.wrappers import Response
 
+from . import common
+
 
 class TestDepot:
     @pytest.fixture(autouse=True)
-    def set_depot_endpoint(self, api_base_url):
+    def set_depot_endpoint(self):
         """Set depot endpoint as object variable"""
 
-        self.depot_endpoint: str = api_base_url + "/depot"
+        self.depot_endpoint: str = common.BASE_URL + "/depot"
         logging.debug(f'Depot Endpoint : "{self.depot_endpoint}"')
 
     @pytest.fixture()
