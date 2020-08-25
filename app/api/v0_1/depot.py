@@ -1,12 +1,13 @@
-from . import bp, errors
-
 from flask import request, jsonify, make_response
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 import logging
+
 from typing import Dict, Union
 
-from app import db
+from . import bp, errors
 
+from app import db
 from app.models import Depot
 
 
@@ -36,6 +37,7 @@ def check_depot(depot):
 
 
 @bp.route("/depot", methods=["GET", "POST"])
+@jwt_required
 def depots():
 
     if request.method == "GET":
@@ -77,8 +79,9 @@ def depots():
         Depot.query.delete()
 
         # Filtering the dict
-        params = ["latitude", "longitude", "user_id"]
+        params = ["latitude", "longitude"]
         depot = {param: depot[param] for param in params}
+        depot["user_id"] = get_jwt_identity()["id"]
 
         # Using dict unpacking for creation
         new_depot = Depot(**depot)
@@ -86,12 +89,11 @@ def depots():
 
         db.session.commit()
 
-        depot["id"] = new_depot.id
-
-        return make_response(jsonify({"depots": [depot]}), 201)
+        return make_response(jsonify({"depots": [new_depot.to_dict()]}), 201)
 
 
 @bp.route("/depot/<int:id>", methods=["GET", "PUT"])
+@jwt_required
 def depot(id: int):
     if request.method == "GET":
         return Depot.query.get_or_404(id).to_dict()
@@ -110,7 +112,7 @@ def depot(id: int):
                 "Invalid JSON received! Request data must be JSON"
             )
 
-        params = ["latitude", "longitude", "user_id"]
+        params = ["latitude", "longitude"]
 
         new_depot: Dict[str, any] = {}
 
@@ -126,7 +128,7 @@ def depot(id: int):
         # Update values in DB
         depot.latitude = new_depot["latitude"]
         depot.longitude = new_depot["longitude"]
-        depot.user_id = new_depot["user_id"]
+        depot.user_id = get_jwt_identity()["id"]
 
         db.session.commit()
 

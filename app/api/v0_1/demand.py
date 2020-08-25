@@ -1,14 +1,13 @@
-from . import bp
-from . import errors
-
 from flask import request, jsonify, make_response
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 import logging
 from typing import Dict, Union
 
-from app import db
+from . import bp
+from . import errors
 
+from app import db
 from app.models import Demand
 
 
@@ -89,7 +88,7 @@ def demand():
         if not demand:
             raise errors.InvalidUsage("'demand' is empty")
 
-        params = ["latitude", "longitude", "cluster_id", "unit", "quantity", "user_id"]
+        params = ["latitude", "longitude", "cluster_id", "unit", "quantity"]
 
         # Checking if each element is valid
         for d in demand:
@@ -110,7 +109,7 @@ def demand():
                 longitude=d["longitude"],
                 quantity=d["quantity"],
                 unit=d["unit"],
-                user_id=d["user_id"],
+                user_id=get_jwt_identity()["id"],
             )
             db.session.add(demand_entry)
             demand_entries.append(demand_entry)
@@ -159,7 +158,7 @@ def demand_one(id: int):
         demand.quantity = new_demand["quantity"]
         demand.cluster_id = new_demand["cluster_id"]
         demand.unit = new_demand["unit"]
-        demand.user_id = new_demand["user_id"]
+        demand.user_id = get_jwt_identity()["id"]
 
         db.session.commit()
 

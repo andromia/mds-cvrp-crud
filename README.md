@@ -139,6 +139,7 @@ CRUD service for solverstack.
 - `id`: integer
 - `demand_id`: integer
 - `depot_id`: integer
+- `vehicle_id`: integer
 - `stop_number`: integer
 - `unit_id`: integer
 - `user_id`: integer
@@ -154,6 +155,7 @@ CRUD service for solverstack.
     "routes": [{
     "demand_id": "",
     "depot_id": "",
+    "vehicle_id": "",
     "stop_number": "",
     "unit": "",
     "user_id": ""

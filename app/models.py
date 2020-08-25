@@ -45,12 +45,7 @@ class Depot(db.Model):
         return f"<Depot id='{self.id}' coordinates=({self.latitude},{self.longitude})>"
 
     def to_dict(self):
-        return {
-            "id": self.id,
-            "latitude": self.latitude,
-            "longitude": self.longitude,
-            "user_id": self.user_id,
-        }
+        return {"id": self.id, "latitude": self.latitude, "longitude": self.longitude}
 
     id = db.Column(db.Integer, primary_key=True)
     latitude = db.Column(db.Float)
@@ -78,7 +73,6 @@ class Demand(db.Model):
             "unit": self.unit,
             "quantity": self.quantity,
             "cluster_id": self.cluster_id,
-            "user_id": self.user_id,
         }
 
     id = db.Column(db.Integer, primary_key=True)
@@ -96,6 +90,7 @@ class Route(db.Model):
     to produce them.
         - demand identifier
         - depot identifier
+        - vehicle identifier
         - stop number
     """
 
@@ -106,12 +101,13 @@ class Route(db.Model):
             "id": self.id,
             "demand": self.demand_id,
             "depot": self.depot_id,
+            "vehicle_id": self.vehicle_id,
             "stop_number": self.stop_number,
-            "user_id": self.user_id,
         }
 
     id = db.Column(db.Integer, primary_key=True)
     demand_id = create_fk("demand.id")
     depot_id = create_fk("depots.id")
-    stop_number = db.Column(db.Integer, nullable=False)
+    vehicle_id = db.Column(db.Integer)
+    stop_number = db.Column(db.Integer)
     user_id = create_fk("users.id")

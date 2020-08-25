@@ -35,7 +35,6 @@ def sample_demand():
         demand["quantity"] = float(demand.pop("weight")) / 10
         demand["unit"] = "kilograms"
         demand["cluster_id"] = int(demand.pop("pallets")) % NUM_CLUSTERS
-        demand["user_id"] = 1
 
     return sample_demand_rows
 
@@ -52,7 +51,6 @@ def random_demand():
         "unit": "".join(
             random.choices(string.ascii_lowercase, k=random.randint(1, 10))
         ),
-        "user_id": 1,
     }
 
 

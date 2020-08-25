@@ -5,6 +5,7 @@ from config import Config
 
 
 BASE_URL: str = f"/api/{__version__}"
+TEST_USER: dict = {"id": 1, "username": "test", "password": "password"}
 
 
 class TestConfig(Config):
@@ -15,7 +16,7 @@ def create_auth_headers():
     app = create_app(TestConfig)
 
     with app.app_context():
-        token = create_access_token("test")
+        token = create_access_token(TEST_USER)
 
     headers = {"Authorization": "Bearer {}".format(token)}
 
