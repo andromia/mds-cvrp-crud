@@ -11,16 +11,16 @@ from . import common
 
 ENDPOINT: str = f"{common.BASE_URL}/geocodes"
 HEADERS = dict(common.AUTH_HEADER, **{"Content-Type": "application/json"})
-GEOCODES = [
-    {"zipcode": "", "country": "", "latitude": "", "longitude": "", "user_id": ""}
-]
+GEOCODES = [{"zipcode": "", "country": "", "latitude": 1.0, "longitude": 1.0}] * 4
 
 
 def test_geocode_endpoint(client):
     logging.debug(f"input_data: {common.TEST_USER}")
     logging.debug(f"endpoint: {ENDPOINT}")
 
-    response = client.post(ENDPOINT, headers=HEADERS, json={"geocodes": GEOCODES})
-    output = json.loads(response.data)
+    response = client.post(
+        ENDPOINT, headers=HEADERS, json={"geocodes": GEOCODES, "stack_id": 1}
+    )
+    output = response.json
 
     assert output

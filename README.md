@@ -94,7 +94,7 @@ CRUD service for solverstack.
 - `country`: string
 - `latitude`: float
 - `longitude`: float
-- `user_id`: integer
+- `stack_id`: integer
 
 ### Manage Geocodes
 
@@ -110,7 +110,7 @@ CRUD service for solverstack.
       "country": "",
       "latitude": "",
       "longitude": "",
-      "user_id": ""
+      "stack_id": ""
       }
     ]
   }
@@ -125,7 +125,7 @@ CRUD service for solverstack.
       "country": "",
       "latitude": "",
       "longitude": "",
-      "user_id": ""
+      "stack_id": ""
       }
     ]
   }
@@ -151,7 +151,7 @@ CRUD service for solverstack.
       "id": "",
       "latitude": "",
       "latitude": "",
-      "user_id": ""
+      "stack_id": ""
     }
   }
   ```
@@ -162,7 +162,8 @@ CRUD service for solverstack.
   {
     "depot" : {
     "latitude": "",
-    "latitude": ""
+    "latitude": "",
+    "stack_id": ""
   }
   ```
 
@@ -175,6 +176,7 @@ CRUD service for solverstack.
 - `longitude`: float
 - `quantity`: float
 - `unit_id`: integer
+- `stack_id`: integer
 
 ### Manage Demand
 
@@ -190,7 +192,7 @@ CRUD service for solverstack.
       "longitude": "",
       "quantity": "",
       "unit": "",
-      "user_id": ""
+      "stack_id": ""
       }
     ]
   }
@@ -204,7 +206,8 @@ CRUD service for solverstack.
       "latitude": "",
       "longitude": "",
       "quantity": "",
-      "unit": ""
+      "unit": "",
+      "stack_id": ""
     }]
   }
   ```
@@ -219,7 +222,7 @@ CRUD service for solverstack.
 - `vehicle_id`: integer
 - `stop_number`: integer
 - `unit_id`: integer
-- `user_id`: integer
+- `stack_id`: integer
 
 ### Manage Routes
 
@@ -235,7 +238,7 @@ CRUD service for solverstack.
     "vehicle_id": "",
     "stop_number": "",
     "unit": "",
-    "user_id": ""
+    "stack_id": ""
     }],
   }
   ```
@@ -250,7 +253,8 @@ CRUD service for solverstack.
     "depot_id": "",
     "vehicle_id": "",
     "stop_number": "",
-    "unit": ""
+    "unit": "",
+    "stack_id": ""
     }],
   }
   ```

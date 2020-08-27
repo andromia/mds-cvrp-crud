@@ -30,23 +30,36 @@ def geocodes():
                 "Invalid JSON received! Request data must be JSON"
             )
 
-        if "geocodes" in data:
-            geocodes = data["geocodes"]
-        else:
+        if "geocodes" not in data:
             raise errors.InvalidUsage("'geocodes' missing in request data")
 
-        if not isinstance(geocodes, dict):
-            raise errors.InvalidUsage("'geocodes' should be a dict")
+        geocodes = data["geocodes"]
+
+        if not isinstance(geocodes, list):
+            raise errors.InvalidUsage("'geocodes' should be a list")
 
         if not geocodes:
             raise errors.InvalidUsage("'geocodes' is empty")
 
-        geocodes["user_id"] = get_jwt_identity()["id"]
+        if "stack_id" not in data:
+            raise errors.InvalidUsage("'stack_id' missing in request data")
 
-        # Using dict unpacking for creation
-        new_geocodes = Geocode(**geocodes)
-        db.session.add(new_geocodes)
+        stack_id = data["stack_id"]
+
+        if not stack_id:
+            raise errors.InvalidUsage("'stack_id' is empty")
+
+        for row in geocodes:
+            new_geocodes = Geocode(
+                zipcode=row["zipcode"],
+                country=row["country"],
+                latitude=row["latitude"],
+                longitude=row["longitude"],
+                stack_id=stack_id,
+            )
+
+            db.session.add(new_geocodes)
 
         db.session.commit()
 
-        return make_response({"geocodes": new_geocodes.to_dict()}, 201)
+        return make_response(jsonify({"geocodes": geocodes}), 201)

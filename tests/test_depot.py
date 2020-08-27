@@ -205,7 +205,7 @@ def test_invalid_depot(client, param, value, random_depot: Dict):
     HEADERS = dict(common.AUTH_HEADER, **{"Content-Type": "application/json"})
 
     res: Response = client.post(
-        ENDPOINT, headers=HEADERS, json={"depots": [depot]},
+        ENDPOINT, headers=HEADERS, json={"depots": [depot], "stack_id": 1},
     )
 
     assert res.status_code == 400
@@ -221,7 +221,7 @@ def test_single_insert(client, random_depot: Dict):
     HEADERS = dict(common.AUTH_HEADER, **{"Content-Type": "application/json"})
 
     res: Response = client.post(
-        ENDPOINT, headers=HEADERS, json={"depots": [depot]},
+        ENDPOINT, headers=HEADERS, json={"depots": [depot], "stack_id": 1},
     )
 
     logging.debug(f"Response : {res}")
@@ -231,6 +231,7 @@ def test_single_insert(client, random_depot: Dict):
     assert res.headers["Content-Type"] == "application/json"
     for depot, response in zip([depot], res.json["depots"]):
         id = response.pop("id")
+        response.pop("stack_id")
         assert isinstance(id, int)
         assert depot == response
         response["id"] = id
@@ -265,7 +266,7 @@ def test_individual_get(client, random_depot):
     HEADERS = dict(common.AUTH_HEADER, **{"Content-Type": "application/json"})
 
     res: Response = client.post(
-        ENDPOINT, headers=HEADERS, json={"depots": depots},
+        ENDPOINT, headers=HEADERS, json={"depots": depots, "stack_id": 1},
     )
 
     logging.debug(f"Response : {res}")
@@ -276,6 +277,7 @@ def test_individual_get(client, random_depot):
 
     for depot, response in zip(depots, res.json["depots"]):
         id = response.pop("id")
+        response.pop("stack_id")
         assert isinstance(id, int)
         assert depot == response
         response["id"] = id
@@ -287,6 +289,7 @@ def test_individual_get(client, random_depot):
 
         individual_depot = test_res.json
         individual_depot.pop("id")
+        individual_depot.pop("stack_id")
         assert test_res.status_code == 200
         assert test_res.is_json
         assert individual_depot == depot
@@ -301,7 +304,7 @@ def test_individual_put(client, random_depot):
     HEADERS = dict(common.AUTH_HEADER, **{"Content-Type": "application/json"})
 
     res: Response = client.post(
-        ENDPOINT, headers=HEADERS, json={"depots": depots},
+        ENDPOINT, headers=HEADERS, json={"depots": depots, "stack_id": 1},
     )
 
     logging.debug(f"Response : {res}")
@@ -314,13 +317,18 @@ def test_individual_put(client, random_depot):
         id = response.pop("id")
         assert isinstance(id, int)
         # PUT individual endpoint data
-        test_res = client.put(ENDPOINT + f"/{id}", headers=HEADERS, json=random_depot,)
+        test_res = client.put(
+            ENDPOINT + f"/{id}",
+            headers=HEADERS,
+            json={"depot": random_depot, "stack_id": 1},
+        )
 
         logging.debug(f"Individual Response for id {id} : {test_res}")
         logging.debug(f"Individual Response Data : {test_res.data}")
 
         assert test_res.status_code == 200
         assert test_res.is_json
-        individual_depot: dict = test_res.json
+        individual_depot: dict = test_res.json["depot"]
         individual_depot.pop("id")
+        individual_depot.pop("stack_id")
         assert individual_depot == depot

@@ -57,18 +57,27 @@ def depots():
                 "Invalid JSON received! Request data must be JSON"
             )
 
-        if "depots" in data:
-            depots = data["depots"]
-        else:
+        if "depots" not in data:
             raise errors.InvalidUsage("'depots' missing in request data")
+
+        depots = data["depots"]
 
         if not isinstance(depots, list):
             raise errors.InvalidUsage("'depots' should be list")
 
         if not depots:
             raise errors.InvalidUsage("'depots' is empty")
+
         elif len(depots) != 1:
             raise errors.InvalidUsage("'depots' contains more than one object")
+
+        if "stack_id" not in data:
+            raise errors.InvalidUsage("'stack_id' missing in request data")
+
+        stack_id = data["stack_id"]
+
+        if not stack_id:
+            raise errors.InvalidUsage("'stack_id' is empty")
 
         depot = depots[0]
 
@@ -81,7 +90,7 @@ def depots():
         # Filtering the dict
         params = ["latitude", "longitude"]
         depot = {param: depot[param] for param in params}
-        depot["user_id"] = get_jwt_identity()["id"]
+        depot["stack_id"] = stack_id
 
         # Using dict unpacking for creation
         new_depot = Depot(**depot)
@@ -112,14 +121,23 @@ def depot(id: int):
                 "Invalid JSON received! Request data must be JSON"
             )
 
+        if "depot" not in data:
+            raise errors.InvalidUsage("'depot' not in data")
+
+        new_depot = data["depot"]
+
+        if "stack_id" not in data:
+            raise errors.InvalidUsage("'stack_id' missing in request data")
+
+        stack_id = data["stack_id"]
+
+        if not stack_id:
+            raise errors.InvalidUsage("'stack_id' is empty")
+
         params = ["latitude", "longitude"]
 
-        new_depot: Dict[str, any] = {}
-
         for param in params:
-            if param in data:
-                new_depot[param] = data[param]
-            else:
+            if param not in new_depot:
                 raise errors.InvalidUsage(f"{param} missing in request data")
 
         # Validate new data
@@ -128,8 +146,8 @@ def depot(id: int):
         # Update values in DB
         depot.latitude = new_depot["latitude"]
         depot.longitude = new_depot["longitude"]
-        depot.user_id = get_jwt_identity()["id"]
+        depot.stack_id = stack_id
 
         db.session.commit()
 
-        return make_response(jsonify(depot.to_dict()), 200)
+        return make_response(jsonify({"depot": depot.to_dict()}), 200)

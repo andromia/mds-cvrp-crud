@@ -31,22 +31,35 @@ def routes():
             )
 
         if "routes" in data:
-            routes = data["routes"]
-        else:
             raise errors.InvalidUsage("'routes' missing in request data")
 
-        if not isinstance(routes, dict):
-            raise errors.InvalidUsage("'routes' should be a dict")
+        routes = data["routes"]
+
+        if not isinstance(routes, list):
+            raise errors.InvalidUsage("'routes' should be a list")
 
         if not routes:
             raise errors.InvalidUsage("'routes' is empty")
 
-        routes["user_id"] = get_jwt_identity()["id"]
+        if "stack_id" not in data:
+            raise errors.InvalidUsage("'stack_id' missing in request data")
 
-        # Using dict unpacking for creation
-        new_routes = Route(**routes)
-        db.session.add(new_routes)
+        stack_id = data["stack_id"]
+
+        if not stack_id:
+            raise errors.InvalidUsage("'stack_id' is empty")
+
+        for row in routes:
+            route_entry = Route(
+                demand_id=row["demand_id"],
+                depot_id=row["depot_id"],
+                vehicle_id=row["vehicle_id"],
+                stop_number=row["stop_number"],
+                stack_id=stack_id,
+            )
+
+            db.session.add(route_entry)
 
         db.session.commit()
 
-        return make_response({"routes": new_routes.to_dict()}, 201)
+        return make_response(jsonify({"routes": routes}), 201)

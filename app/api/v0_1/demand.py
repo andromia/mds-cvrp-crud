@@ -80,13 +80,21 @@ def demand():
                 "Invalid JSON received! Request data must be JSON"
             )
 
-        if "demand" in data:
-            demand = data["demand"]
-        else:
+        if "demand" not in data:
             raise errors.InvalidUsage("'demand' missing in request data")
+
+        demand = data["demand"]
 
         if not demand:
             raise errors.InvalidUsage("'demand' is empty")
+
+        if "stack_id" not in data:
+            raise errors.InvalidUsage("'stack_id' missing in request data")
+
+        stack_id = data["stack_id"]
+
+        if not stack_id:
+            raise errors.InvalidUsage("'stack_id' is empty")
 
         params = ["latitude", "longitude", "cluster_id", "unit", "quantity"]
 
@@ -109,23 +117,17 @@ def demand():
                 longitude=d["longitude"],
                 quantity=d["quantity"],
                 unit=d["unit"],
-                user_id=get_jwt_identity()["id"],
+                stack_id=stack_id,
             )
             db.session.add(demand_entry)
             demand_entries.append(demand_entry)
 
         db.session.commit()
 
-        for d, demand_entry in zip(demand, demand_entries):
-            d["id"] = demand_entry.id
+        for d, entry in zip(demand, demand_entries):
+            d["id"] = entry.id
 
-        # for unit in data['add_units']:
-        #     print(f"Adding unit '{unit}'")
-        #     un = Unit(name=unit)
-        #     db.session.add(un)
-        #     db.session.commit()
-
-        return make_response(jsonify(demand), 201)
+        return make_response(jsonify({"demand": demand}), 201)
 
 
 @bp.route("/demand/<int:id>", methods=["GET", "PUT"])
@@ -145,10 +147,21 @@ def demand_one(id: int):
                 "Invalid JSON received! Request data must be JSON"
             )
 
-        if "demand" in data:
-            new_demand: dict = data["demand"]
-        else:
+        if "demand" not in data:
             raise errors.InvalidUsage("'demand' missing in request data")
+
+        new_demand = data["demand"]
+
+        if not new_demand:
+            raise errors.InvalidUsage("'demand' is empty")
+
+        if "stack_id" not in data:
+            raise errors.InvalidUsage("'stack_id' missing in request data")
+
+        stack_id = data["stack_id"]
+
+        if not stack_id:
+            raise errors.InvalidUsage("'stack_id' is empty")
 
         # Validate demand
         check_demand(new_demand)
@@ -158,8 +171,8 @@ def demand_one(id: int):
         demand.quantity = new_demand["quantity"]
         demand.cluster_id = new_demand["cluster_id"]
         demand.unit = new_demand["unit"]
-        demand.user_id = get_jwt_identity()["id"]
+        demand.stack_id = stack_id
 
         db.session.commit()
 
-        return make_response(jsonify(demand.to_dict()), 200)
+        return make_response(jsonify({"demand": demand.to_dict()}), 200)

@@ -75,7 +75,9 @@ class StackChain(db.Model):
     chained_id = create_fk("stacks.id")
 
     def __repr__(self):
-        return f"<StackChain ({self.stack_id, self.chained_id})>"
+        return (
+            f"<StackChain id={self.id} " f"chain=({self.stack_id}, {self.chained_id})>"
+        )
 
     def to_dict(self):
         return {"id": self.id, "stack_id": self.stack_id, "chained_id": self.chained_id}
@@ -89,7 +91,7 @@ class Geocode(db.Model):
       - country
       - latitude
       - longitude
-      - user identifier
+      - stack identifier
     """
 
     __tablename__ = "geocodes"
@@ -99,14 +101,15 @@ class Geocode(db.Model):
     country = db.Column(db.String(2), nullable=False)
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
-    user_id = create_fk("users.id")
+    stack_id = create_fk("stacks.id")
 
     def __repr__(self):
         return (
-            f"<Geocode id='{self.id}' "
-            "zipcode='{self.zipcode}' "
-            "country='{self.country}' "
-            "coordinates=({self.latitude},{self.longitude})>"
+            f"<Geocode id={self.id} "
+            f"zipcode={self.zipcode} "
+            f"country={self.country} "
+            f"coordinates=({self.latitude},{self.longitude}) "
+            f"stack_id={self.stack_id}>"
         )
 
     def to_dict(self):
@@ -116,6 +119,7 @@ class Geocode(db.Model):
             "country": self.country,
             "latitude": self.latitude,
             "longitude": self.longitude,
+            "stack_id": self.stack_id,
         }
 
 
@@ -125,7 +129,7 @@ class Depot(db.Model):
       - depot identifier
       - latitude
       - longitude
-      - user identifier
+      - stack identifier
     """
 
     __tablename__ = "depots"
@@ -133,15 +137,22 @@ class Depot(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
-    user_id = create_fk("users.id")
+    stack_id = create_fk("stacks.id")
 
     def __repr__(self):
         return (
-            f"<Depot id='{self.id}' " "coordinates=({self.latitude},{self.longitude})>"
+            f"<Depot id={self.id} "
+            "coordinates=({self.latitude},{self.longitude}) "
+            "stack_id={self.stack_id}>"
         )
 
     def to_dict(self):
-        return {"id": self.id, "latitude": self.latitude, "longitude": self.longitude}
+        return {
+            "id": self.id,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "stack_id": self.stack_id,
+        }
 
 
 class Demand(db.Model):
@@ -151,7 +162,7 @@ class Demand(db.Model):
       - geocodes (latitude & longitude)
       - units for capacity constraint
       - cluster identifier for sub-problem spaces
-      - user identifier
+      - stack identifier
     """
 
     __tablename__ = "demand"
@@ -162,7 +173,16 @@ class Demand(db.Model):
     quantity = db.Column(db.Float, nullable=False)
     unit = db.Column(db.String(10))
     cluster_id = db.Column(db.Integer)
-    user_id = create_fk("users.id")
+    stack_id = create_fk("stacks.id")
+
+    def __repr__(self):
+        return (
+            f"<Demand id={self.id} "
+            f"coordinates=({self.latitude},{self.longitude}) "
+            f"units=({self.quantity}, {self.unit}) "
+            f"cluster_id={self.cluster_id} "
+            f"stack_id={self.stack_id}>"
+        )
 
     def to_dict(self):
         return {
@@ -172,6 +192,7 @@ class Demand(db.Model):
             "unit": self.unit,
             "quantity": self.quantity,
             "cluster_id": self.cluster_id,
+            "stack_id": self.stack_id,
         }
 
 
@@ -183,6 +204,7 @@ class Route(db.Model):
         - depot identifier
         - vehicle identifier
         - stop number
+        - stack identifier
     """
 
     __tablename__ = "routes"
@@ -192,13 +214,24 @@ class Route(db.Model):
     depot_id = create_fk("depots.id")
     vehicle_id = db.Column(db.Integer)
     stop_number = db.Column(db.Integer)
-    user_id = create_fk("users.id")
+    stack_id = create_fk("stacks.id")
+
+    def __repr__(self):
+        return (
+            f"<Route id={self.id} "
+            f"demand_id={self.demand_id} "
+            f"depot_id={self.depot_id} "
+            f"vehicle_id={self.vehicle_id} "
+            f"stop_number={self.stop_number} "
+            f"stack_id={self.stack_id}>"
+        )
 
     def to_dict(self):
         return {
             "id": self.id,
-            "demand": self.demand_id,
-            "depot": self.depot_id,
+            "demand_id": self.demand_id,
+            "depot_id": self.depot_id,
             "vehicle_id": self.vehicle_id,
             "stop_number": self.stop_number,
+            "stack_id": self.stack_id,
         }

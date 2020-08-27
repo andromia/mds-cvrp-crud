@@ -250,7 +250,7 @@ def test_invalid_demand(client, param, value, random_demand):
     HEADERS = dict(common.AUTH_HEADER, **{"Content-Type": "application/json"})
 
     res: Response = client.post(
-        ENDPOINT, headers=HEADERS, json={"demand": [demand]},
+        ENDPOINT, headers=HEADERS, json={"demand": [demand], "stack_id": 1},
     )
 
     assert res.status_code == 400
@@ -266,7 +266,7 @@ def test_single_insert(client, random_demand: List[dict]):
     HEADERS = dict(common.AUTH_HEADER, **{"Content-Type": "application/json"})
 
     res: Response = client.post(
-        ENDPOINT, headers=HEADERS, json={"demand": [demand]},
+        ENDPOINT, headers=HEADERS, json={"demand": [demand], "stack_id": 1},
     )
 
     logging.debug(f"Response : {res}")
@@ -275,7 +275,7 @@ def test_single_insert(client, random_demand: List[dict]):
     assert res.status_code == 201
     assert res.headers["Content-Type"] == "application/json"
 
-    for demand, response in zip([demand], res.json):
+    for demand, response in zip([demand], res.json["demand"]):
         id = response.pop("id")
         assert isinstance(id, int)
         assert demand == response
@@ -290,13 +290,13 @@ def test_batch_insert(client, sample_demand: List[dict]):
     HEADERS = dict(common.AUTH_HEADER, **{"Content-Type": "application/json"})
 
     res: Response = client.post(
-        ENDPOINT, headers=HEADERS, json={"demand": sample_demand},
+        ENDPOINT, headers=HEADERS, json={"demand": sample_demand, "stack_id": 1},
     )
 
     assert res.status_code == 201
-    assert len(res.json) == len(sample_demand)
+    assert len(res.json["demand"]) == len(sample_demand)
 
-    for demand, response in zip(sample_demand, res.json):
+    for demand, response in zip(sample_demand, res.json["demand"]):
         id = response.pop("id")
         assert isinstance(id, int)
         assert demand == response
