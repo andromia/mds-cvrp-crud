@@ -42,7 +42,7 @@ def depots():
 
     if request.method == "GET":
         depot = Depot.query.get_or_404(1).to_dict()
-        return jsonify({"depot": depot})
+        return jsonify({"depots": depot})
 
     if request.method == "POST":
 
@@ -79,13 +79,13 @@ def depots():
         if not stack_id:
             raise errors.InvalidUsage("'stack_id' is empty")
 
-        depot = depots[0]
+        depot = depots[0]  # TODO
 
         # Checking if depot is valid
         check_depot(depot)
 
         # Deleting every depot
-        Depot.query.delete()
+        Depot.query.delete()  # TODO
 
         # Filtering the dict
         params = ["latitude", "longitude"]
@@ -98,7 +98,11 @@ def depots():
 
         db.session.commit()
 
-        return make_response(jsonify({"depots": [new_depot.to_dict()]}), 201)
+        # TODO
+        response = new_depot.to_dict()
+        response.pop("stack_id")
+
+        return make_response(jsonify({"stack_id": stack_id, "depots": [response]}), 201)
 
 
 @bp.route("/depot/<int:id>", methods=["GET", "PUT"])

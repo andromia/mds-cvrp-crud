@@ -231,7 +231,6 @@ def test_single_insert(client, random_depot: Dict):
     assert res.headers["Content-Type"] == "application/json"
     for depot, response in zip([depot], res.json["depots"]):
         id = response.pop("id")
-        response.pop("stack_id")
         assert isinstance(id, int)
         assert depot == response
         response["id"] = id
@@ -277,7 +276,6 @@ def test_individual_get(client, random_depot):
 
     for depot, response in zip(depots, res.json["depots"]):
         id = response.pop("id")
-        response.pop("stack_id")
         assert isinstance(id, int)
         assert depot == response
         response["id"] = id
