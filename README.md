@@ -98,19 +98,19 @@ CRUD service for solverstack.
 
 ### Manage Geocodes
 
-- **endpoint**: /geocodes
+- **endpoint**: /geocode
 - **methods**: `GET`, `POST`
 - **`GET` data expected:**
 
   ```json
   {
+    "stack_id": "",
     "geocodes": [{
       "id": "",
       "zipcode": "",
       "country": "",
       "latitude": "",
       "longitude": "",
-      "stack_id": ""
       }
     ]
   }
@@ -120,12 +120,12 @@ CRUD service for solverstack.
 
   ```json
   {
+    "stack_id": "",
     "geocodes": [{
       "zipcode": "",
       "country": "",
       "latitude": "",
       "longitude": "",
-      "stack_id": ""
       }
     ]
   }
@@ -147,12 +147,12 @@ CRUD service for solverstack.
 
   ```json
   {
-    "depot": {
+    "stack_id": "",
+    "depots": [{
       "id": "",
       "latitude": "",
-      "latitude": "",
-      "stack_id": ""
-    }
+      "latitude": ""
+    }]
   }
   ```
 
@@ -160,10 +160,11 @@ CRUD service for solverstack.
 
   ```json
   {
-    "depot" : {
+    "stack_id": "",
+    "depots" : [{
     "latitude": "",
     "latitude": "",
-    "stack_id": ""
+    }]
   }
   ```
 
@@ -186,13 +187,13 @@ CRUD service for solverstack.
 
   ```json
   {
+    "stack_id": "",
     "demand": [{
       "id": "",
       "latitude": "",
       "longitude": "",
       "quantity": "",
-      "unit": "",
-      "stack_id": ""
+      "unit": ""
       }
     ]
   }
@@ -202,12 +203,12 @@ CRUD service for solverstack.
 
   ```json
   {
+    "stack_id": "",
     "demand": [{
       "latitude": "",
       "longitude": "",
       "quantity": "",
-      "unit": "",
-      "stack_id": ""
+      "unit": ""
     }]
   }
   ```
@@ -232,13 +233,13 @@ CRUD service for solverstack.
 
   ```json
   {
+    "stack_id": "",
     "routes": [{
     "demand_id": "",
     "depot_id": "",
     "vehicle_id": "",
     "stop_number": "",
-    "unit": "",
-    "stack_id": ""
+    "unit": ""
     }],
   }
   ```
@@ -248,13 +249,13 @@ CRUD service for solverstack.
 
   ```json
   {
+    "stack_id": "",
     "routes": [{
     "demand_id": "",
     "depot_id": "",
     "vehicle_id": "",
     "stop_number": "",
-    "unit": "",
-    "stack_id": ""
+    "unit": ""
     }],
   }
   ```
