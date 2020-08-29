@@ -13,11 +13,8 @@ def geocodes():
 
     if request.method == "GET":
         geocodes: dict = Geocode.query.get_or_404(1).to_dict()
-        
-        response: dict = {
-            "stack_id": geocodes["stack_id"],
-            "geocodes": [geocodes]
-        }
+
+        response: dict = {"stack_id": geocodes["stack_id"], "geocodes": [geocodes]}
 
         return make_response(jsonify(response), 200)
 
@@ -52,7 +49,7 @@ def geocodes():
 
         if not stack_id:
             raise errors.InvalidUsage("'stack_id' is empty")
-        
+
         entries: list = []
 
         for row in geocodes:
@@ -71,7 +68,7 @@ def geocodes():
 
         response: dict = {
             "stack_id": stack_id,
-            "geocodes": [entry.to_dict() for entry in entries]
+            "geocodes": [entry.to_dict() for entry in entries],
         }
 
         return make_response(jsonify(response), 201)

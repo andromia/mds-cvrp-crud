@@ -8,19 +8,17 @@ from config import Config
 
 
 ENDPOINT: str = f"{common.BASE_URL}/routes"
-HEADERS = dict(common.AUTH_HEADER, **{"Content-Type": "application/json"})
 ROUTES = [
     {"demand_id": "", "depot_id": "", "vehicle_id": "", "stop_number": "", "unit": ""}
 ] * 4
 
 
-def test_route_endpoint(client):
-    logging.debug(f"input_data: {common.TEST_USER}")
+def test_route_endpoint(client, auth_header):
+    input_data: dict = {"routes": ROUTES, "stack_id": 1}
+    logging.debug(f"input_data: {input_data}")
     logging.debug(f"endpoint: {ENDPOINT}")
 
-    response = client.post(
-        ENDPOINT, headers=HEADERS, json={"routes": ROUTES, "stack_id": 1}
-    )
+    response = client.post(ENDPOINT, headers=auth_header, json=input_data)
     output = json.loads(response.data)
 
     assert output

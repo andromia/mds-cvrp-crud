@@ -1,28 +1,26 @@
+from . import common
+from config import Config
+
 import logging
 import pytest
 import json
 
-from . import common
-
-from config import Config
-
 
 ENDPOINT: str = f"{common.BASE_URL}/user"
-TEST_USER: dict = {"username": "test", "password": "password"}
 
 
 def test_user_endpoint(client):
-    logging.debug(f"input_data: {TEST_USER}")
+    logging.debug(f"input_data: {common.TEST_USER}")
     logging.debug(f"endpoint: {ENDPOINT}")
 
-    response = client.post(ENDPOINT, json={"user": TEST_USER})
+    response = client.post(ENDPOINT, json={"user": common.TEST_USER})
     output = json.loads(response.data)
 
     assert output
 
-    logging.debug(f"username: {TEST_USER['username']}")
+    logging.debug(f"username: {common.TEST_USER['username']}")
 
-    response = client.get(f"{ENDPOINT}/{TEST_USER['username']}")
-    user = json.loads(response.data)["user"]
+    response = client.get(f"{ENDPOINT}/{common.TEST_USER['username']}")
+    user: dict = json.loads(response.data)["user"]
 
-    assert user["username"] == TEST_USER["username"]
+    assert user["username"] == common.TEST_USER["username"]

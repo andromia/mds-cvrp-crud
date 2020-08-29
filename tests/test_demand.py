@@ -1,3 +1,5 @@
+from . import common
+
 # from flask import FlaskClient
 from werkzeug.wrappers import Response
 from unittest.mock import patch
@@ -9,8 +11,6 @@ import random
 from csv import DictReader
 from typing import List
 
-from . import common
-
 
 ENDPOINT: str = common.BASE_URL + "/demand"
 
@@ -21,9 +21,9 @@ def sample_demand():
 
     # Loading data from sample csv
     with open("tests/vrp_testing_data.csv") as sample_demand_file:
-        sample_demand_rows = list(DictReader(sample_demand_file))
+        sample_demand_rows: list = list(DictReader(sample_demand_file))
 
-    NUM_CLUSTERS = 10
+    NUM_CLUSTERS: int = 10
 
     # Cleaning individual objects in-place
     for demand in sample_demand_rows:
@@ -125,12 +125,12 @@ def random_demand():
         "application/x-7z-compressed",
     ],
 )
-def test_non_json_request(client, content_type):
+def test_non_json_request(client, content_type: str, auth_header: dict):
     """Test with content types other than 'application/json'"""
 
     logging.info(f"Testing with content-type : {content_type}")
 
-    HEADERS = dict(common.AUTH_HEADER, **{"Content-Type": content_type})
+    HEADERS: dict = dict(auth_header, **{"Content-Type": content_type})
 
     res: Response = client.post(ENDPOINT, headers=HEADERS, data="")
 
@@ -142,13 +142,13 @@ def test_non_json_request(client, content_type):
     assert res.json["message"] == "Incorrect request format! Request data must be JSON"
 
 
-def test_invalid_json(client):
+def test_invalid_json(client, auth_header: dict):
     """Test with invalid JSON in request"""
 
     logging.info("Testing with invalid JSON")
     logging.debug(f'Sending request to "{ENDPOINT}"')
 
-    HEADERS = dict(common.AUTH_HEADER, **{"Content-Type": "application/json"})
+    HEADERS: dict = dict(auth_header, **{"Content-Type": "application/json"})
 
     res: Response = client.post(
         ENDPOINT,
@@ -169,16 +169,14 @@ def test_invalid_json(client):
     assert res.json["message"] == "Invalid JSON received! Request data must be JSON"
 
 
-def test_empty_demand(client):
+def test_empty_demand(client, auth_header):
     """Test by sending empty demand array"""
-
+    input_data: dict = {"demand": []}
     logging.info("Testing with empty demand array")
 
-    HEADERS = dict(common.AUTH_HEADER, **{"Content-Type": "application/json"})
+    HEADERS: dict = dict(auth_header, **{"Content-Type": "application/json"})
 
-    res: Response = client.post(
-        ENDPOINT, headers=HEADERS, json={"demand": []},
-    )
+    res: Response = client.post(ENDPOINT, headers=HEADERS, json=input_data)
 
     logging.debug(f"Response : {res}")
     logging.debug(f"Response Data : {res.data}")
@@ -186,7 +184,7 @@ def test_empty_demand(client):
     assert res.status_code == 400
     assert res.headers["Content-Type"] == "application/json"
 
-    error_message = res.json["message"]
+    error_message: str = res.json["message"]
     assert error_message == "'demand' is empty"
 
 
@@ -238,66 +236,65 @@ def test_empty_demand(client):
         ("quantity", ""),
     ],
 )
-def test_invalid_demand(client, param, value, random_demand):
+def test_invalid_demand(
+    client, auth_header: dict, param: str, value: any, random_demand: dict
+):
     """Test with invalid parameters in demand"""
 
-    demand = random_demand
+    demand: dict = random_demand
+    input_data: dict = {"demand": [demand], "stack_id": 1}
     logging.debug(f"Demand : {demand}")
+    logging.debug(f"Input data : {input_data}")
 
-    demand[param] = value
-    logging.debug(f"Invalid Demand : {demand}")
+    demand[param]: any = value
+    logging.debug(f"Invalid demand : {demand}")
 
-    HEADERS = dict(common.AUTH_HEADER, **{"Content-Type": "application/json"})
+    HEADERS: dict = dict(auth_header, **{"Content-Type": "application/json"})
 
-    res: Response = client.post(
-        ENDPOINT, headers=HEADERS, json={"demand": [demand], "stack_id": 1},
-    )
+    res: Response = client.post(ENDPOINT, headers=HEADERS, json=input_data)
 
     assert res.status_code == 400
     assert f"Invalid {param}" in res.json["message"]
 
 
-def test_single_insert(client, random_demand: List[dict]):
+def test_single_insert(client, auth_header: dict, random_demand: dict):
     """Test with single demand"""
+    demand: dict = random_demand
+    input_data: dict = {"demand": [demand], "stack_id": 1}
+    logging.debug(f"demand : {demand}")
 
-    demand = random_demand
-    logging.debug(f"Demand : {demand}")
+    HEADERS: dict = dict(auth_header, **{"Content-Type": "application/json"})
 
-    HEADERS = dict(common.AUTH_HEADER, **{"Content-Type": "application/json"})
-
-    res: Response = client.post(
-        ENDPOINT, headers=HEADERS, json={"demand": [demand], "stack_id": 1},
-    )
+    res: Response = client.post(ENDPOINT, headers=HEADERS, json=input_data)
 
     logging.debug(f"Response : {res}")
-    logging.debug(f"Response Data : {res.data}")
+    logging.debug(f"Response data : {res.data}")
 
     assert res.status_code == 201
     assert res.headers["Content-Type"] == "application/json"
 
     for demand, response in zip([demand], res.json["demand"]):
-        id = response.pop("id")
+        id: int = response.pop("id")
         assert isinstance(id, int)
         assert demand == response
-        response["id"] = id
+        response["id"]: int = id
 
 
-def test_batch_insert(client, sample_demand: List[dict]):
+def test_batch_insert(client, auth_header: dict, sample_demand: List[dict]):
     """Test with multiple demand"""
 
+    input_data: dict = {"demand": sample_demand, "stack_id": 1}
     logging.info("Testing with multiple demand in one request")
 
-    HEADERS = dict(common.AUTH_HEADER, **{"Content-Type": "application/json"})
+    HEADERS: dict = dict(auth_header, **{"Content-Type": "application/json"})
 
-    res: Response = client.post(
-        ENDPOINT, headers=HEADERS, json={"demand": sample_demand, "stack_id": 1},
-    )
+    res: Response = client.post(ENDPOINT, headers=HEADERS, json=input_data)
 
     assert res.status_code == 201
     assert len(res.json["demand"]) == len(sample_demand)
 
     for demand, response in zip(sample_demand, res.json["demand"]):
-        id = response.pop("id")
+        id: int = response.pop("id")
         assert isinstance(id, int)
         assert demand == response
-        response["id"] = id
+        response["id"]: int = id

@@ -1,15 +1,16 @@
+from . import common
+from app import create_app, db
+from config import Config
+
 import pytest
 import os
 import tempfile
-
-from config import Config
-
-from app import create_app, db
 import logging
+from flask_jwt_extended import create_access_token
 
 
 class TestConfig(Config):
-    TESTING = True
+    TESTING: bool = True
 
 
 @pytest.fixture(scope="session")
@@ -34,3 +35,15 @@ def client():
     # Removing temp test db
     os.close(db_fd)
     os.unlink(db_filepath)
+
+
+@pytest.fixture()
+def auth_header():
+    app = create_app(TestConfig)
+
+    with app.app_context():
+        token: str = create_access_token(common.TEST_USER)
+
+    header: dict = {"Authorization": "Bearer {}".format(token)}
+
+    return header
