@@ -5,7 +5,7 @@ Vagrant.configure("2") do |config|
     vb.memory = "512"
   end
 
-  config.vm.network :forwarded_port, guest: 5006, host: 5006
+  config.vm.network :forwarded_port, guest: 5004, host: 5004
   config.vm.provision "shell", inline: <<-SHELL
     apt-get update -y
     apt-get upgrade -y
