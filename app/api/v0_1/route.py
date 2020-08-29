@@ -1,14 +1,13 @@
+from . import bp, errors
+from app import db
+from app.models import Route
+
 from flask import request, jsonify, make_response
 from flask_jwt_extended import jwt_required, get_jwt_identity
 import logging
 
-from . import bp, errors
 
-from app import db
-from app.models import Route
-
-
-@bp.route("/routes", methods=["GET", "POST"])
+@bp.route("/route", methods=["GET", "POST"])
 @jwt_required
 def routes():
 
@@ -30,7 +29,7 @@ def routes():
                 "Invalid JSON received! Request data must be JSON"
             )
 
-        if "routes" in data:
+        if "routes" not in data:
             raise errors.InvalidUsage("'routes' missing in request data")
 
         routes = data["routes"]

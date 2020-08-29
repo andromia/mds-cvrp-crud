@@ -227,7 +227,7 @@ CRUD service for solverstack.
 
 ### Manage Routes
 
-- **endpoint**: /routes
+- **endpoint**: /route
 - **methods**: `GET`
 - **`GET` data expected:**
 

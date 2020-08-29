@@ -7,7 +7,7 @@ from . import common
 from config import Config
 
 
-ENDPOINT: str = f"{common.BASE_URL}/routes"
+ENDPOINT: str = f"{common.BASE_URL}/route"
 ROUTES = [
     {"demand_id": "", "depot_id": "", "vehicle_id": "", "stop_number": "", "unit": ""}
 ] * 4
