@@ -1,8 +1,6 @@
 # solverstack-crud
 
-![crud](https://github.com/andromia/solverstack-crud/workflows/crud/badge.svg)
-[![Discord](https://img.shields.io/discord/721862473132540007?label=discord&style=plastic)](https://discord.gg/wg7xSAf)
-[![Slack](https://img.shields.io/badge/slack-workspace-orange)](https://join.slack.com/t/andromiasoftware/shared_invite/zt-felqfjhs-Tvma8OYuCExxdmQgHOIGsg)
+![crud](https://github.com/cnpryer/solverstack-crud/workflows/crud/badge.svg)
 
 [Under Development]
 
